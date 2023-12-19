@@ -1,0 +1,28 @@
+body {
+    margin: 0;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.dep:hover {
+    fill: #f00;
+}
+
+.hidden {
+    display: none;
+}
+.click{
+    display: block;
+}
+div.tooltip {
+    color: #222;
+    background-color: #ffacac;
+    padding: .5em;
+    text-shadow: #f5f5f5 0 1px 0;
+    border-radius: 2px;
+    opacity: 0.9;
+    position: absolute;
+}

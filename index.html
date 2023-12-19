@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <style></style>
+    <link rel="stylesheet" href="./style.css">
 </head>
 
 
@@ -18,28 +18,90 @@
             .attr("width", width)
             .attr("height", height);
         
-        var projection = d3.geoMercator().center([4.85, 45.75])
+        var projection = d3.geoMercator()
                             .scale(200000)
                             .translate([width / 2, height / 2]);
 
+        var tooltip = d3.select('body').append('div')
+            .attr('class', 'hidden tooltip');
 
         // Print metro stations
         var metro = d3.json("./data/sytral_tcl_sytral.tclarret_sans_bus.json").then(function (data) {
+            centerlat =( d3.min(data.features, function (d) {
+                return d.geometry.coordinates[0][1];
+            })+d3.max(data.features, function (d) {
+                return d.geometry.coordinates[0][1];
+            }))/2;
+            centerlon = (d3.min(data.features, function (d) {
+                return d.geometry.coordinates[0][0];
+            })+d3.max(data.features, function (d) {
+                return d.geometry.coordinates[0][0];
+            }))/2;
+            projection.center([centerlon,centerlat])
+
+
+            var tram_lines = svg.append("g");
+            var metro_lines = svg.append("g");
+            // Affichage des arrets
             var metro = svg.append("g");
             metro
+                .attr("class", "arrets")
                 .selectAll("path")
                 .data(data.features)
                 .enter()
                 .append("path")
                 .attr("d", d3.geoPath().projection(projection))
-                .attr("fill", "none")
+                .attr("fill", "Transparent")
                 .attr("stroke", "black")
-                .attr("stroke-width", 1);
+                .attr("stroke-width", 1)
+                .on('mousemove', function(e, d) {
+                    // on recupere la position de la souris,
+                    // e est l'object event d
+                    var mousePosition = [e.x, e.y];
+                    if (tooltip.classed('click') && tooltip.attr("pointerOn") === d.properties.nom){
+                        return
+                    }else{
+                        tooltip.classed('click', false)
+                        tooltip.attr("pointerOn",null)
+                    }
+                    // on affiche le toolip
+                    tooltip.classed('hidden', false)
+                        // on positionne le tooltip en fonction
+                        // de la position de la souris
+                        .attr('style', 'left:' + (mousePosition[0] + 15) +
+                            'px; top:' + (mousePosition[1] - 35) + 'px')
+                        // on recupere le nom de l'etat
+
+                        .html("<b>"+d.properties.nom+"</b>");
+
+                })
+                .on('click', function(e, d) {
+                    // on recupere la position de la souris,
+                    // e est l'object event d
+                    var mousePosition = [e.x, e.y];
+
+                    // on affiche le toolip
+                    tooltip.classed('click', true)
+                        // on positionne le tooltip en fonction
+                        // de la position de la souris
+                        .attr('style', 'left:' + (mousePosition[0] + 15) +
+                            'px; top:' + (mousePosition[1] - 35) + 'px')
+                        // on recupere le nom de l'etat
+                        .attr("pointerOn",d.properties.nom)
+                        .html("<b>"+d.properties.nom+"</b><br>"+d.properties.commune+"<br>"+d.properties.nom_ligne);
+
+                })
+                .on('mouseout', function() {
+                    // on cache le toolip
+                    tooltip.classed('hidden', true);
+                })
+
 
             // Affichage ligne Metro
-            var metro_lines = d3.json("./data/sytral_tcl_sytral.tcllignemetrofuni_2_0_0.json").then(function (data) {
-                var metro_lines = svg.append("g");
+            var metro_lines_func = d3.json("./data/sytral_tcl_sytral.tcllignemetrofuni_2_0_0.json").then(function (data) {
+
                 metro_lines
+                    .attr("class", "metro_lines")
                     .selectAll("path")
                     .data(data.features)
                     .enter()
@@ -55,9 +117,10 @@
             });
 
             // Affichage ligne Tram
-            var tram_lines = d3.json("./data/sytral_tcl_sytral.tcllignetram_2_0_0.json").then(function (data) {
-                var tram_lines = svg.append("g");
+            var tram_lines_func = d3.json("./data/sytral_tcl_sytral.tcllignetram_2_0_0.json").then(function (data) {
+
                 tram_lines
+                    .attr("class", "tram_lines")
                     .selectAll("path")
                     .data(data.features)
                     .enter()
