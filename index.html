@@ -3,54 +3,69 @@
 <head>
     <meta charset="utf-8" />
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <link rel="stylesheet" href="./style.css">
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map {
+            width: 800px;
+            height: 600px;
+        }
+    </style>
 </head>
 
 
 <body>
+    <div id="map"></div>
     <script>
-        var width = window.innerWidth,
-            height = window.innerHeight;
+        /********************************
+         * ------------------------------
+         * -- MISE EN PLACE DE LA MAP ---
+         * ------------------------------
+         *******************************/
+        // Conversion GEOJSON -> leaflet coordonnées
+        function projectPoint(x, y) {
+            var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+            this.stream.point(point.x, point.y);
+        }
 
-        var svg = d3
-            .select("body")
-            .append("svg")
-            .attr("width", width)
-            .attr("height", height);
-        
-        var projection = d3.geoMercator()
-                            .scale(200000)
-                            .translate([width / 2, height / 2]);
+        // Transformation des coordonnées en coordonnées Leaflet
+        var transform = d3.geoTransform({point: projectPoint}),
+
+        // Déclaration de la projection D3 utilisée
+        path = d3.geoPath().projection(transform);
+
+        // Update map si zoom
+        function update() {
+            d3.selectAll("path").attr("d", path);
+        }
+
+        // Create Leaflet map
+        var map = L.map('map').setView([45.75, 4.85], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+            maxZoom: 18,
+        }).addTo(map);
+
+        L.svg().addTo(map);        
+        map.on("moveend", update);
 
         var tooltip = d3.select('body').append('div')
             .attr('class', 'hidden tooltip');
 
         // Print metro stations
         var metro = d3.json("./data/sytral_tcl_sytral.tclarret_sans_bus.json").then(function (data) {
-            centerlat =( d3.min(data.features, function (d) {
-                return d.geometry.coordinates[0][1];
-            })+d3.max(data.features, function (d) {
-                return d.geometry.coordinates[0][1];
-            }))/2;
-            centerlon = (d3.min(data.features, function (d) {
-                return d.geometry.coordinates[0][0];
-            })+d3.max(data.features, function (d) {
-                return d.geometry.coordinates[0][0];
-            }))/2;
-            projection.center([centerlon,centerlat])
 
-
-            var tram_lines = svg.append("g");
-            var metro_lines = svg.append("g");
+            var tram_lines = d3.select("svg").append("g");
+            var metro_lines = d3.select("svg").append("g");
             // Affichage des arrets
-            var metro = svg.append("g");
+            var metro = d3.select("svg").select("g");
             metro
                 .attr("class", "arrets")
                 .selectAll("path")
                 .data(data.features)
                 .enter()
                 .append("path")
-                .attr("d", d3.geoPath().projection(projection))
+                .attr("d", path)
                 .attr("fill", "Transparent")
                 .attr("stroke", "black")
                 .attr("stroke-width", 1)
@@ -106,7 +121,7 @@
                     .data(data.features)
                     .enter()
                     .append("path")
-                    .attr("d", d3.geoPath().projection(projection))
+                    .attr("d", path)
                     .attr("fill", "none")
                     .attr("stroke-width", 2)
                     .attr("stroke", d =>{
@@ -125,7 +140,7 @@
                     .data(data.features)
                     .enter()
                     .append("path")
-                    .attr("d", d3.geoPath().projection(projection))
+                    .attr("d", path)
                     .attr("fill", "none")
                     .attr("stroke-width", 2)
                     .attr("stroke", d =>{

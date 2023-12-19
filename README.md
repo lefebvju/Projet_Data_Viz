@@ -32,3 +32,12 @@
   - Mise en dimension
   - Coloration des lignes avec les couleurs **officielles** du réseau TCL
   - ![Viz1.png](img/Viz1.png)
+
+### Vacances de Noël
+**Julien :**
+- Ajout de données en info-bulle
+- Debug fond de carte leaflet
+
+**Loris :**
+- Ajout d'un fond de carte leaflet
+![Viz2.png](img/Viz2.png)
