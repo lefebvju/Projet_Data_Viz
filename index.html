@@ -23,7 +23,7 @@
                             .translate([width / 2, height / 2]);
 
 
-        // Print metro lines
+        // Print metro stations
         var metro = d3.json("./data/sytral_tcl_sytral.tclarret_sans_bus.json").then(function (data) {
             var metro = svg.append("g");
             metro
@@ -35,6 +35,42 @@
                 .attr("fill", "none")
                 .attr("stroke", "black")
                 .attr("stroke-width", 1);
+
+            // Affichage ligne Metro
+            var metro_lines = d3.json("./data/sytral_tcl_sytral.tcllignemetrofuni_2_0_0.json").then(function (data) {
+                var metro_lines = svg.append("g");
+                metro_lines
+                    .selectAll("path")
+                    .data(data.features)
+                    .enter()
+                    .append("path")
+                    .attr("d", d3.geoPath().projection(projection))
+                    .attr("fill", "none")
+                    .attr("stroke-width", 2)
+                    .attr("stroke", d =>{
+                        col = d.properties.couleur
+                        col = col.split(" ")
+                        return "rgb("+col[0]+","+col[1]+","+col[2]+")"
+                        })
+            });
+
+            // Affichage ligne Tram
+            var tram_lines = d3.json("./data/sytral_tcl_sytral.tcllignetram_2_0_0.json").then(function (data) {
+                var tram_lines = svg.append("g");
+                tram_lines
+                    .selectAll("path")
+                    .data(data.features)
+                    .enter()
+                    .append("path")
+                    .attr("d", d3.geoPath().projection(projection))
+                    .attr("fill", "none")
+                    .attr("stroke-width", 2)
+                    .attr("stroke", d =>{
+                        col = d.properties.couleur
+                        col = col.split(" ")
+                        return "rgb("+col[0]+","+col[1]+","+col[2]+")"
+                        })
+            });
         });
     </script>
 
