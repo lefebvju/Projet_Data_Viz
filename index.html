@@ -47,14 +47,24 @@
             metro
                 .attr("class", "arrets")
                 .selectAll("path")
-                .data(data.features)
+                .data(data.features.filter(function(d, i, self) {
+                    // Utilisez une fonction de filtrage pour éviter les doublons
+                    return i === self.findIndex((t) => {
+                        if(t.properties.nom === d.properties.nom){
+                            t.properties.nom_ligne=[...new Set(d.properties.nom_ligne.concat(t.properties.nom_ligne))]
+                            return true
+                        }else {
+                            return false
+                        }
+                });
+                }))
                 .enter()
                 .append("path")
                 .attr("d", d3.geoPath().projection(projection))
                 .attr("fill", "Transparent")
                 .attr("stroke", "black")
                 .attr("stroke-width", 1)
-                .on('mousemove', function(e, d) {
+                .on('mouseover', function(e, d) {
                     // on recupere la position de la souris,
                     // e est l'object event d
                     var mousePosition = [e.x, e.y];
@@ -64,6 +74,7 @@
                         tooltip.classed('click', false)
                         tooltip.attr("pointerOn",null)
                     }
+
                     // on affiche le toolip
                     tooltip.classed('hidden', false)
                         // on positionne le tooltip en fonction
@@ -73,6 +84,7 @@
                         // on recupere le nom de l'etat
 
                         .html("<b>"+d.properties.nom+"</b>");
+
 
                 })
                 .on('click', function(e, d) {
@@ -109,11 +121,40 @@
                     .attr("d", d3.geoPath().projection(projection))
                     .attr("fill", "none")
                     .attr("stroke-width", 2)
+                    .attr("class", d => d.properties.ligne)
                     .attr("stroke", d =>{
                         col = d.properties.couleur
                         col = col.split(" ")
                         return "rgb("+col[0]+","+col[1]+","+col[2]+")"
                         })
+                    .on('mouseover', function(e, d) {
+                        d3.select(this).attr("stroke-width",5)
+                        console.log(d.properties)
+                        var mousePosition = [e.x, e.y];
+                        if (tooltip.classed('click') && tooltip.attr("pointerOn") === d.properties.nom){
+                            return
+                        }else{
+                            tooltip.classed('click', false)
+                            tooltip.attr("pointerOn",null)
+                        }
+                        col = d.properties.couleur
+                        col = col.split(" ")
+                        col= "rgb("+col[0]+","+col[1]+","+col[2]+")"
+                        // on affiche le toolip
+                        tooltip.classed('hidden', false)
+                            // on positionne le tooltip en fonction
+                            // de la position de la souris
+                            .attr('style', 'left:' + (mousePosition[0] + 15) +
+                                'px; top:' + (mousePosition[1] - 35) + 'px')
+                            // on recupere le nom de l'etat
+
+                            .html("<b>Ligne: "+d.properties.ligne+"</b>");
+
+                    })
+                    .on('mouseout', function(e, d) {
+                        d3.select(this).attr("stroke-width",2)
+                        tooltip.classed('hidden', true);
+                    })
             });
 
             // Affichage ligne Tram
@@ -133,6 +174,33 @@
                         col = col.split(" ")
                         return "rgb("+col[0]+","+col[1]+","+col[2]+")"
                         })
+                    .on('mouseover', function(e, d) {
+                        d3.select(this).attr("stroke-width",5)
+                        var mousePosition = [e.x, e.y];
+                        if (tooltip.classed('click') && tooltip.attr("pointerOn") === d.properties.nom){
+                            return
+                        }else{
+                            tooltip.classed('click', false)
+                            tooltip.attr("pointerOn",null)
+                        }
+                        col = d.properties.couleur
+                        col = col.split(" ")
+                        col= "rgb("+col[0]+","+col[1]+","+col[2]+")"
+                        // on affiche le toolip
+                        tooltip.classed('hidden', false)
+                            // on positionne le tooltip en fonction
+                            // de la position de la souris
+                            .attr('style', 'left:' + (mousePosition[0] + 15) +
+                                'px; top:' + (mousePosition[1] - 35) + 'px')
+                            // on recupere le nom de l'etat
+
+                            .html("<b>Ligne: "+d.properties.ligne+"</b>");
+
+                    })
+                    .on('mouseout', function(e, d) {
+                        d3.select(this).attr("stroke-width",2)
+                        tooltip.classed('hidden', true);
+                    })
             });
         });
     </script>
