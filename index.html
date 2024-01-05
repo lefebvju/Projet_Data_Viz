@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="./js/tooltip.js"></script>
     <link rel="stylesheet" href="./style.css">
 </head>
 
@@ -115,7 +116,10 @@
                 metro_lines
                     .attr("class", "metro_lines")
                     .selectAll("path")
-                    .data(data.features)
+                    .data(data.features.filter(function(d, i, self) {
+                        // Utilisez une fonction de filtrage pour éviter les doublons
+                        return i === self.findIndex((t) =>(t.properties.ligne === d.properties.ligne));
+                    }))
                     .enter()
                     .append("path")
                     .attr("d", d3.geoPath().projection(projection))
@@ -127,30 +131,7 @@
                         col = col.split(" ")
                         return "rgb("+col[0]+","+col[1]+","+col[2]+")"
                         })
-                    .on('mouseover', function(e, d) {
-                        d3.select(this).attr("stroke-width",5)
-                        console.log(d.properties)
-                        var mousePosition = [e.x, e.y];
-                        if (tooltip.classed('click') && tooltip.attr("pointerOn") === d.properties.nom){
-                            return
-                        }else{
-                            tooltip.classed('click', false)
-                            tooltip.attr("pointerOn",null)
-                        }
-                        col = d.properties.couleur
-                        col = col.split(" ")
-                        col= "rgb("+col[0]+","+col[1]+","+col[2]+")"
-                        // on affiche le toolip
-                        tooltip.classed('hidden', false)
-                            // on positionne le tooltip en fonction
-                            // de la position de la souris
-                            .attr('style', 'left:' + (mousePosition[0] + 15) +
-                                'px; top:' + (mousePosition[1] - 35) + 'px')
-                            // on recupere le nom de l'etat
-
-                            .html("<b>Ligne: "+d.properties.ligne+"</b>");
-
-                    })
+                    .on('mouseover', mouseoverLigne())
                     .on('mouseout', function(e, d) {
                         d3.select(this).attr("stroke-width",2)
                         tooltip.classed('hidden', true);
@@ -163,40 +144,22 @@
                 tram_lines
                     .attr("class", "tram_lines")
                     .selectAll("path")
-                    .data(data.features)
+                    .data(data.features.filter(function(d, i, self) {
+                        // Utilisez une fonction de filtrage pour éviter les doublons
+                        return i === self.findIndex((t) =>(t.properties.ligne === d.properties.ligne));
+                    }))
                     .enter()
                     .append("path")
                     .attr("d", d3.geoPath().projection(projection))
                     .attr("fill", "none")
                     .attr("stroke-width", 2)
+                    .attr("class", d =>  d.properties.ligne)
                     .attr("stroke", d =>{
                         col = d.properties.couleur
                         col = col.split(" ")
                         return "rgb("+col[0]+","+col[1]+","+col[2]+")"
                         })
-                    .on('mouseover', function(e, d) {
-                        d3.select(this).attr("stroke-width",5)
-                        var mousePosition = [e.x, e.y];
-                        if (tooltip.classed('click') && tooltip.attr("pointerOn") === d.properties.nom){
-                            return
-                        }else{
-                            tooltip.classed('click', false)
-                            tooltip.attr("pointerOn",null)
-                        }
-                        col = d.properties.couleur
-                        col = col.split(" ")
-                        col= "rgb("+col[0]+","+col[1]+","+col[2]+")"
-                        // on affiche le toolip
-                        tooltip.classed('hidden', false)
-                            // on positionne le tooltip en fonction
-                            // de la position de la souris
-                            .attr('style', 'left:' + (mousePosition[0] + 15) +
-                                'px; top:' + (mousePosition[1] - 35) + 'px')
-                            // on recupere le nom de l'etat
-
-                            .html("<b>Ligne: "+d.properties.ligne+"</b>");
-
-                    })
+                    .on('mouseover', mouseoverLigne())
                     .on('mouseout', function(e, d) {
                         d3.select(this).attr("stroke-width",2)
                         tooltip.classed('hidden', true);
