@@ -4,11 +4,13 @@
     <meta charset="utf-8" />
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="./js/tooltip.js"></script>
+    <script src="./js/filter.js"></script>
     <link rel="stylesheet" href="./style.css">
 </head>
 
 
 <body>
+<div id="filter-section"></div>
     <script>
         var width = window.innerWidth,
             height = window.innerHeight;
@@ -125,7 +127,7 @@
                     .attr("d", d3.geoPath().projection(projection))
                     .attr("fill", "none")
                     .attr("stroke-width", 2)
-                    .attr("class", d => d.properties.ligne)
+                    .attr("id", d => d.properties.ligne)
                     .attr("stroke", d =>{
                         col = d.properties.couleur
                         col = col.split(" ")
@@ -136,6 +138,8 @@
                         d3.select(this).attr("stroke-width",2)
                         tooltip.classed('hidden', true);
                     })
+                    addFilter(data)
+
             });
 
             // Affichage ligne Tram
@@ -153,7 +157,7 @@
                     .attr("d", d3.geoPath().projection(projection))
                     .attr("fill", "none")
                     .attr("stroke-width", 2)
-                    .attr("class", d =>  d.properties.ligne)
+                    .attr("id", d =>  d.properties.ligne)
                     .attr("stroke", d =>{
                         col = d.properties.couleur
                         col = col.split(" ")
@@ -163,7 +167,9 @@
                     .on('mouseout', function(e, d) {
                         d3.select(this).attr("stroke-width",2)
                         tooltip.classed('hidden', true);
-                    })
+                    });
+                addFilter(data)
+
             });
         });
     </script>

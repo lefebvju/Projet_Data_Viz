@@ -1,7 +1,3 @@
-function ligne(d) {
-
-}
-
 function mouseover(affichageTooltip) {
     return function f(e, d) {
         d3.select(this).attr("stroke-width", 5)
