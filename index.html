@@ -3,17 +3,11 @@
 <head>
     <meta charset="utf-8" />
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="./js/tooltip.js"></script>
-    <script src="./js/filter.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="./js/tooltip.js"></script>
+    <script src="./js/filter.js"></script>
     <link rel="stylesheet" href="./style.css" />
-    <style>
-        #map {
-            width: 800px;
-            height: 600px;
-        }
-    </style>
 </head>
 
 
@@ -44,17 +38,39 @@
             d3.selectAll("path").attr("d", path);
         }
 
-        var tooltip = d3.select('body').append('div')
-            .attr('class', 'hidden tooltip');
+        // Create Leaflet map
+        var map = L.map('map').setView([45.75, 4.85], 12);
+
+        //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+            maxZoom: 18,
+        }).addTo(map);
 
         L.svg().addTo(map);
         map.on("moveend", update);
 
         var tooltip = d3.select('#tooltip');
         var svg=d3.select("svg");
-        // Print metro stations
-        var metro = d3.json("./data/sytral_tcl_sytral.tclarret_sans_bus.json").then(function (data) {
 
+        /***************************************
+         * -------------------------------------
+         * -- Affichage des arrets de métros ---
+         * -------------------------------------
+         **************************************/
+        var metro = d3.json("./data/sytral_tcl_sytral.tclarret_sans_bus.json").then(function (data) {
+            centerlat =( d3.min(data.features, function (d) {
+                return d.geometry.coordinates[0][1];
+            })+d3.max(data.features, function (d) {
+                return d.geometry.coordinates[0][1];
+            }))/2;
+            centerlon = (d3.min(data.features, function (d) {
+                return d.geometry.coordinates[0][0];
+            })+d3.max(data.features, function (d) {
+                return d.geometry.coordinates[0][0];
+            }))/2;
+
+            map.setView([centerlat,centerlon]);
 
             var tram_lines = svg.append("g");
             var metro_lines = svg.append("g");
@@ -124,9 +140,12 @@
                     tooltip.classed('hidden', true);
                 })
 
-
-            // Affichage ligne Metro
-            var metro_lines_func = d3.json("./data/sytral_tcl_sytral.tcllignemetrofuni_2_0_0.json").then(function (data) {
+            /***************************************
+             * -------------------------------------
+             * -- Affichage des lignes de métros ---
+             * -------------------------------------
+             **************************************/
+            d3.json("./data/sytral_tcl_sytral.tcllignemetrofuni_2_0_0.json").then(function (data) {
 
                 metro_lines
                     .attr("class", "metro_lines")
@@ -140,6 +159,7 @@
                     .attr("d", path)
                     .attr("fill", "none")
                     .attr("stroke-width", 2)
+                    .style("pointer-events", "stroke")
                     .attr("id", d => d.properties.ligne)
                     .attr("stroke", d =>{
                         col = d.properties.couleur
@@ -155,8 +175,12 @@
 
             });
 
-            // Affichage ligne Tram
-            var tram_lines_func = d3.json("./data/sytral_tcl_sytral.tcllignetram_2_0_0.json").then(function (data) {
+            /*************************************
+             * -----------------------------------
+             * -- Affichage des lignes de tram ---
+             * -----------------------------------
+             ************************************/
+            d3.json("./data/sytral_tcl_sytral.tcllignetram_2_0_0.json").then(function (data) {
 
                 tram_lines
                     .attr("class", "tram_lines")
@@ -170,6 +194,7 @@
                     .attr("d", path)
                     .attr("fill", "none")
                     .attr("stroke-width", 2)
+                    .style("pointer-events", "stroke")
                     .attr("id", d =>  d.properties.ligne)
                     .attr("stroke", d =>{
                         col = d.properties.couleur

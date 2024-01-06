@@ -10,6 +10,11 @@ body {
     justify-content: center;
 }
 
+#map {
+    width: 100%;
+    height: 100%;
+}
+
 .dep:hover {
     fill: #f00;
 }
@@ -28,7 +33,7 @@ div.tooltip {
     border-radius: 2px;
     opacity: 0.9;
     position: absolute;
-    z-index: 999; /* Valeur à ajuster selon vos besoins */
+    z-index: 600; /* Valeur à ajuster selon vos besoins */
 }
 
 .filter {
@@ -56,5 +61,7 @@ div.tooltip {
     position: absolute;
     top: 0;
     right: 0;
+
+    z-index: 601;
 }
 

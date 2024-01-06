@@ -25,6 +25,7 @@ function mouseover(affichageTooltip) {
 
 function mouseoverLigne() {
     return mouseover(function (d) {
+        console.log(d)
         return "<b>Ligne: "+d.properties.ligne+"</b>";
     })
 }

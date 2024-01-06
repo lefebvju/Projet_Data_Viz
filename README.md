@@ -37,7 +37,13 @@
 **Julien :**
 - Ajout de données en info-bulle
 - Debug fond de carte leaflet
+- Filtrage des données pour ne plus avoir de doublons (plusieurs arrêts avec le même nom et les lignes pour chacun des sens)
+- Ajout des boutons pour filtrer les lignes et afficher seulement les souhaitées
+  ![filtre](img/filtre.gif)
+- Résolution du hover qui ne fonctionnait plus avec le fond de carte et fusion de la branche sans-fond avec le main
+![Filtre et fond de carte](img/filtre+fond.gif)
 
 **Loris :**
 - Ajout d'un fond de carte leaflet
 ![Viz2.png](img/Viz2.png)
+
