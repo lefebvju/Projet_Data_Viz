@@ -67,6 +67,7 @@
                 .attr("fill", "Transparent")
                 .attr("stroke", "black")
                 .attr("stroke-width", 1)
+                .attr("class",(d)=>d.properties.nom_ligne.join(" "))
                 .on('mouseover', function(e, d) {
                     // on recupere la position de la souris,
                     // e est l'object event d
