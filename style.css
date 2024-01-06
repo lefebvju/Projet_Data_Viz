@@ -30,3 +30,31 @@ div.tooltip {
     position: absolute;
     z-index: 999; /* Valeur à ajuster selon vos besoins */
 }
+
+.filter {
+    width: 40px; /* Ajustez la taille du cercle selon vos besoins */
+    height: 40px;
+    border-radius: 50%; /* Transforme le div en un cercle */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin: 10px;
+}
+
+/* Style de l'icône à l'intérieur du cercle (assumant que l'icône est un élément <i>) */
+.filter i {
+    color: #ffffff; /* Couleur de l'icône */
+    font-size: 18px; /* Taille de l'icône */
+}
+
+.filter:hover {
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Ombre légère avec couleur noire */
+ }
+
+#filter-section{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+

@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8" />
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="./js/tooltip.js"></script>
+    <script src="./js/filter.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="./style.css" />
@@ -16,6 +18,7 @@
 
 
 <body>
+<div id="filter-section"></div>
     <div id="tooltip" class="hidden tooltip"></div>
     <div id="map"></div>
     <script>
@@ -41,29 +44,36 @@
             d3.selectAll("path").attr("d", path);
         }
 
-        // Create Leaflet map
-        var map = L.map('map').setView([45.75, 4.85], 12);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-            maxZoom: 18,
-        }).addTo(map);
+        var tooltip = d3.select('body').append('div')
+            .attr('class', 'hidden tooltip');
 
-        L.svg().addTo(map);        
+        L.svg().addTo(map);
         map.on("moveend", update);
 
         var tooltip = d3.select('#tooltip');
-
+        var svg=d3.select("svg");
         // Print metro stations
         var metro = d3.json("./data/sytral_tcl_sytral.tclarret_sans_bus.json").then(function (data) {
 
-            var tram_lines = d3.select("svg").append("g");
-            var metro_lines = d3.select("svg").append("g");
+
+            var tram_lines = svg.append("g");
+            var metro_lines = svg.append("g");
             // Affichage des arrets
-            var metro = d3.select("svg").select("g");
+            var metro = svg.append("g");
             metro
                 .attr("class", "arrets")
                 .selectAll("path")
-                .data(data.features)
+                .data(data.features.filter(function(d, i, self) {
+                    // Utilisez une fonction de filtrage pour éviter les doublons
+                    return i === self.findIndex((t) => {
+                        if(t.properties.nom === d.properties.nom){
+                            t.properties.nom_ligne=[...new Set(d.properties.nom_ligne.concat(t.properties.nom_ligne))]
+                            return true
+                        }else {
+                            return false
+                        }
+                });
+                }))
                 .enter()
                 .append("path")
                 .attr("d", path)
@@ -71,7 +81,8 @@
                 .attr("stroke", "black")
                 .attr("stroke-width", 1)
                 .style("pointer-events", "all")
-                .on('mousemove', function(e, d) {
+                .attr("class",(d)=>d.properties.nom_ligne.join(" "))
+                .on('mouseover', function(e, d) {
                     // on recupere la position de la souris,
                     // e est l'object event d
                     var mousePosition = [e.x, e.y];
@@ -120,17 +131,28 @@
                 metro_lines
                     .attr("class", "metro_lines")
                     .selectAll("path")
-                    .data(data.features)
+                    .data(data.features.filter(function(d, i, self) {
+                        // Utilisez une fonction de filtrage pour éviter les doublons
+                        return i === self.findIndex((t) =>(t.properties.ligne === d.properties.ligne));
+                    }))
                     .enter()
                     .append("path")
                     .attr("d", path)
                     .attr("fill", "none")
                     .attr("stroke-width", 2)
+                    .attr("id", d => d.properties.ligne)
                     .attr("stroke", d =>{
                         col = d.properties.couleur
                         col = col.split(" ")
                         return "rgb("+col[0]+","+col[1]+","+col[2]+")"
                         })
+                    .on('mouseover', mouseoverLigne())
+                    .on('mouseout', function(e, d) {
+                        d3.select(this).attr("stroke-width",2)
+                        tooltip.classed('hidden', true);
+                    })
+                    addFilter(data)
+
             });
 
             // Affichage ligne Tram
@@ -139,17 +161,28 @@
                 tram_lines
                     .attr("class", "tram_lines")
                     .selectAll("path")
-                    .data(data.features)
+                    .data(data.features.filter(function(d, i, self) {
+                        // Utilisez une fonction de filtrage pour éviter les doublons
+                        return i === self.findIndex((t) =>(t.properties.ligne === d.properties.ligne));
+                    }))
                     .enter()
                     .append("path")
                     .attr("d", path)
                     .attr("fill", "none")
                     .attr("stroke-width", 2)
+                    .attr("id", d =>  d.properties.ligne)
                     .attr("stroke", d =>{
                         col = d.properties.couleur
                         col = col.split(" ")
                         return "rgb("+col[0]+","+col[1]+","+col[2]+")"
                         })
+                    .on('mouseover', mouseoverLigne())
+                    .on('mouseout', function(e, d) {
+                        d3.select(this).attr("stroke-width",2)
+                        tooltip.classed('hidden', true);
+                    });
+                addFilter(data)
+
             });
         });
     </script>
