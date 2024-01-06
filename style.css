@@ -5,6 +5,9 @@ body {
     right: 0;
     bottom: 0;
     left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .dep:hover {
@@ -25,4 +28,5 @@ div.tooltip {
     border-radius: 2px;
     opacity: 0.9;
     position: absolute;
+    z-index: 999; /* Valeur à ajuster selon vos besoins */
 }

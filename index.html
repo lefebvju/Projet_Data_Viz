@@ -16,6 +16,7 @@
 
 
 <body>
+    <div id="tooltip" class="hidden tooltip"></div>
     <div id="map"></div>
     <script>
         /********************************
@@ -50,8 +51,7 @@
         L.svg().addTo(map);        
         map.on("moveend", update);
 
-        var tooltip = d3.select('body').append('div')
-            .attr('class', 'hidden tooltip');
+        var tooltip = d3.select('#tooltip');
 
         // Print metro stations
         var metro = d3.json("./data/sytral_tcl_sytral.tclarret_sans_bus.json").then(function (data) {
@@ -70,6 +70,7 @@
                 .attr("fill", "Transparent")
                 .attr("stroke", "black")
                 .attr("stroke-width", 1)
+                .style("pointer-events", "all")
                 .on('mousemove', function(e, d) {
                     // on recupere la position de la souris,
                     // e est l'object event d
