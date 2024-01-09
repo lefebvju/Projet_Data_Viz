@@ -36,6 +36,13 @@
         // Update map si zoom
         function update() {
             d3.selectAll("path").attr("d", path);
+            d3.selectAll("circle")
+                .attr("cx", function(d) {
+                    return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).x
+                })
+                .attr("cy", function(d) {
+                    return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).y
+                })
         }
 
         // Create Leaflet map
@@ -44,7 +51,8 @@
         //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-            maxZoom: 18,
+            maxZoom: 15,
+            minZoom: 12
         }).addTo(map);
 
         L.svg().addTo(map);
@@ -116,7 +124,7 @@
                             'px; top:' + (mousePosition[1] - 35) + 'px')
                         // on recupere le nom de l'etat
 
-                        .html("<b>"+d.properties.nom+"</b>");
+                        .html("<b>"+d.properties.nom+"</b><br/>"+"Ligne : "+d.properties.nom_ligne);
 
                 })
                 .on('click', function(e, d) {
@@ -139,6 +147,39 @@
                     // on cache le toolip
                     tooltip.classed('hidden', true);
                 })
+
+                // -----------------------
+                // Affichage des points d'arrets
+                // VERSION NON DEFINITIVE
+                // -----------------------
+                var arrets = svg.append("g");
+                arrets.selectAll("circle")
+                    .data(data.features.filter(function(d, i, self) {
+                        // Utilisez une fonction de filtrage pour éviter les doublons
+                        return i === self.findIndex((t) => {
+                            if(t.properties.nom === d.properties.nom){
+                                t.properties.nom_ligne=[...new Set(d.properties.nom_ligne.concat(t.properties.nom_ligne))]
+                                return true
+                            }else {
+                                return false
+                            }
+                        });
+                    }))
+                    .enter()
+                    .append("circle")
+                    .attr("cx", function(d) {
+                        return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).x
+                    })
+                    .attr("cy", function(d) {
+                        return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).y
+                    })
+                    .attr("r", 3)
+                    .style("pointer-events", "all")  
+                // -----------------------
+                // FIN DE LA
+                // VERSION NON DEFINITIVE
+                // -----------------------
+
 
             /***************************************
              * -------------------------------------
