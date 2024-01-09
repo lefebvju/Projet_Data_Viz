@@ -1,0 +1,177 @@
+Ligne : A
+Bellecour : 45 454
+Charpennes : 35 849
+Hôtel de Ville L. Pradel : 34 821
+Perrache : 24 356
+Cordeliers : 15 537
+Vaulx-en-Velin La Soie : 14 905
+Gratte Ciel : 14 100
+Foch : 11 823
+Laurent Bonnevay : 11 737
+Masséna : 10 885
+Flachet : 9 085
+République Villeurbanne : 8 210
+Cusset : 7 765
+Ampère - Victor Hugo : 6 379
+Total : 250 906 voy/j
+
+Ligne : B
+Saxe - Gambetta : 40 118
+Gare Part-Dieu V.Merle : 39 338
+Charpennes : 24 337
+Jean Macé : 19 474
+Gare d'Oullins : 13 717
+Place Jean Jaurès : 11 337
+Debourg : 10 033
+Place Guichard : 8 935
+Stade de Gerland Le LOU : 6 443
+Brotteaux : 5 468
+Total : 179 200 voy/j
+
+Ligne : C
+Hôtel de Ville L. Pradel : 15 100
+Croix-Rousse : 8 512
+Hénon : 5 577
+Cuire : 4 525
+Croix-Paquet : 943
+Total : 34 657 voy/j
+
+Ligne : D
+Bellecour : 67 901
+Saxe Gambetta : 36 889
+Gorge de Loup : 28 574
+Grange Blanche : 26 669
+Gare de Vaise : 24 282
+Guillotière Gabriel Péri : 18 004
+Sans Souci : 13 404
+Garibaldi : 13 234
+Vieux Lyon : 12 520
+Gare Venissieux : 12 083
+Valmy : 10 556
+Mermoz - Pinel : 9 382
+Monplaisir Lumière : 8 935
+Parilly : 6 222
+Laennec : 4 222
+Total : 292 877 voy/j
+
+Ligne : T1
+Gare Part-Dieu V.Merle : 13 161
+Perrache : 13 113
+Charpennes : 8 910
+Guillotière Gabriel Péri : 8 776
+Hôtel Région Montrochet : 8 006
+Rue de l'Université : 5 510
+Quai Claude Bernard : 4 920
+Sainte-Blandine : 4 416
+La Doua - Gaston Berger : 4 015
+Place des Archives : 3 826
+Debourg : 3 758
+Thiers - Lafayette : 3 343
+INSA - Einstein : 3 313
+Palais Justice Mairie 3e : 3 160
+Halle Tony Garnier : 2 867
+Condorcet : 2 790
+Saxe - Préfecture : 2 610
+Le Tonkin : 2 546
+Université Lyon 1 : 2 315
+Saint-André : 2 286
+Musée des Confluences : 2 240
+Part-Dieu Auditorium : 2 207
+Liberté : 2 173
+ENS Lyon : 2 020
+IUT Feyssine : 1 968
+Bellecombe : 1 312
+Croix-Luizet : 1 150
+Total : 116 714 voy/j
+
+Ligne : T2
+Grange blanche : 12 418
+Perrache : 9 569
+Jean Macé : 9 471
+Bachut - Mairie du 8ème : 7 368
+Jet d'eau Mendes France : 7 723
+Centre Berthelot : 5 631
+Parilly - Université : 4 571
+Route de Vienne : 4 364
+Villon : 3 452
+Garibaldi - Berthelot : 3 244
+Bron Hôtel de Ville : 3 121
+Europe - Université : 3 068
+Porte des Alpes : 2 935
+Ambroise Paré : 2 520
+Jean XXIII - M. Bastié : 2 482
+Alizés : 2 399
+Esplanade des Arts : 2 098
+Rebufer : 1 986
+St-Priest Hôtel de Ville : 1 732
+Boutasse - C. Rousset : 1 655
+Desgenettes : 1 641
+Salvador Allende : 1 150
+Saint-Priest Jules Ferry : 1 120
+Saint-Priest Bel Air : 1 118
+Cordière : 1 032
+Alfred de Vigny : 994
+Parc Technologique : 976
+Essarts - Iris : 884
+Hauts de Feuilly : 562
+Total : 101 284 voy/j
+
+Ligne : T3
+Part Dieu : 9 296
+Vaulx-en-Velin La Soie : 8 923
+Dauphiné -Lacassagne : 4 550
+Meyzieu Gare : 4 448
+Gare de Villeurbanne : 3 964
+Reconnaissance - Balzac : 3 810
+Décines Centre : 2 936
+Meyzieu Z.i. : 2 933
+Décines Grand Large : 2 800
+Bel Air - Les Brosses : 2 775
+Meyzieu les Panettes : 844
+Total : 47 279 voy/j
+
+Ligne : T4
+Gare Part-Dieu Villette : 10 066
+Jet d'Eau - M. France : 7 135
+Gare de Vénissieux : 7 866
+Charpennes : 6 678
+Manufacture Montluc : 4 282
+Beauvisage CISL : 4 240
+Etats-Unis Viviani : 4 043
+Archives Departementales : 3 857
+Herriot - Cagne : 3 848
+Etats-Unis Tony Garnier : 3 424
+Joliot-Curie - M. Sembat : 3 229
+Lycee Colbert : 2 926
+Venissy : 2 800
+Croizat - Paul Bert : 2 796
+M. Houël Hôtel de Ville : 2 692
+La Doua - Gaston Berger : 2 690
+Lycée Lumière : 2 585
+Division Leclerc : 2 317
+Thiers - Lafayette : 2 223
+Maurice Thorez : 2 008
+Lycée Jacques Brel : 1 867
+Condorcet : 1 804
+Le Tonkin : 1 747
+La Borelle : 1 534
+Université Lyon 1 : 1 451
+Lenine - Corsiere : 1 317
+Darnaise : 1 280
+Collège Bellecombe : 1 126
+Hop. Feyzin Venissieux : 1 006
+Total : 94 837 Voy/j
+
+Ligne : T5
+Grange blanche : 2 541
+Eurexpo Entrée Princ. : 924
+Lycee J.P. Sartre : 909
+Bron HdV : 859
+Les Alizés : 799
+Parc du Chêne : 708
+De Tassigny - Curial : 526
+Boutasse Camille Rousset : 440
+Ambroise Paré : 398
+Desgenettes : 346
+Essarts Iris : 247
+Total : 8 667 voy/j

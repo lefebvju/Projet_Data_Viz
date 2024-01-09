@@ -34,6 +34,11 @@
   - ![Viz1.png](img/Viz1.png)
 
 ### Vacances de Noël
+**Loris :**
+- Ajout d'un fond de carte leaflet
+- Mise en relation des coordonnées d3js avec les coordonnées leaflet
+![Viz2.png](img/Viz2.png)
+
 **Julien :**
 - Ajout de données en info-bulle
 - Debug fond de carte leaflet
@@ -43,7 +48,17 @@
 - Résolution du hover qui ne fonctionnait plus avec le fond de carte et fusion de la branche sans-fond avec le main
 ![Filtre et fond de carte](img/filtre+fond.gif)
 
+### Séance 3 : 9 janvier
+**Tous les 3 :**
+- Débrief et analyse de notre carte
+- Recherche de nouvelles données  
+=> *Ajout des données d'affluence par jour et par station*
+- Recherche de nouvelles visualisations
+
+### Semaine 9-16 janvier
 **Loris :**
-- Ajout d'un fond de carte leaflet
-![Viz2.png](img/Viz2.png)
+- Formatage des données d'affluence
+  - Correction des noms d'arrêts
+  - Formattage du fichier
+  - Conversion en CSV
 

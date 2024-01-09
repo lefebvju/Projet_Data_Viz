@@ -1,0 +1,152 @@
+ligne,arret,frequentation
+A,Bellecour,45 454
+A,Charpennes,35 849
+A,Hôtel de Ville L. Pradel,34 821
+A,Perrache,24 356
+A,Cordeliers,15 537
+A,Vaulx-en-Velin La Soie,14 905
+A,Gratte Ciel,14 100
+A,Foch,11 823
+A,Laurent Bonnevay,11 737
+A,Masséna,10 885
+A,Flachet,9 085
+A,République Villeurbanne,8 210
+A,Cusset,7 765
+A,Ampère - Victor Hugo,6 379
+B,Saxe - Gambetta,40 118
+B,Gare Part-Dieu V.Merle,39 338
+B,Charpennes,24 337
+B,Jean Macé,19 474
+B,Gare d'Oullins,13 717
+B,Place Jean Jaurès,11 337
+B,Debourg,10 033
+B,Place Guichard,8 935
+B,Stade de Gerland Le LOU,6 443
+B,Brotteaux,5 468
+C,Hôtel de Ville L. Pradel,15 100
+C,Croix-Rousse,8 512
+C,Hénon,5 577
+C,Cuire,4 525
+C,Croix-Paquet,943
+D,Bellecour,67 901
+D,Saxe Gambetta,36 889
+D,Gorge de Loup,28 574
+D,Grange Blanche,26 669
+D,Gare de Vaise,24 282
+D,Guillotière Gabriel Péri,18 004
+D,Sans Souci,13 404
+D,Garibaldi,13 234
+D,Vieux Lyon,12 520
+D,Gare Venissieux,12 083
+D,Valmy,10 556
+D,Mermoz - Pinel,9 382
+D,Monplaisir Lumière,8 935
+D,Parilly,6 222
+D,Laennec,4 222
+T1,Gare Part-Dieu V.Merle,13 161
+T1,Perrache,13 113
+T1,Charpennes,8 910
+T1,Guillotière Gabriel Péri,8 776
+T1,Hôtel Région Montrochet,8 006
+T1,Rue de l'Université,5 510
+T1,Quai Claude Bernard,4 920
+T1,Sainte-Blandine,4 416
+T1,La Doua - Gaston Berger,4 015
+T1,Place des Archives,3 826
+T1,Debourg,3 758
+T1,Thiers - Lafayette,3 343
+T1,INSA - Einstein,3 313
+T1,Palais Justice Mairie 3e,3 160
+T1,Halle Tony Garnier,2 867
+T1,Condorcet,2 790
+T1,Saxe - Préfecture,2 610
+T1,Le Tonkin,2 546
+T1,Université Lyon 1,2 315
+T1,Saint-André,2 286
+T1,Musée des Confluences,2 240
+T1,Part-Dieu Auditorium,2 207
+T1,Liberté,2 173
+T1,ENS Lyon,2 020
+T1,IUT Feyssine,1 968
+T1,Bellecombe,1 312
+T1,Croix-Luizet,1 150
+T2,Grange blanche,12 418
+T2,Perrache,9 569
+T2,Jean Macé,9 471
+T2,Bachut - Mairie du 8ème,7 368
+T2,Jet d'eau Mendes France,7 723
+T2,Centre Berthelot,5 631
+T2,Parilly - Université,4 571
+T2,Route de Vienne,4 364
+T2,Villon,3 452
+T2,Garibaldi - Berthelot,3 244
+T2,Bron Hôtel de Ville,3 121
+T2,Europe - Université,3 068
+T2,Porte des Alpes,2 935
+T2,Ambroise Paré,2 520
+T2,Jean XXIII - M. Bastié,2 482
+T2,Alizés,2 399
+T2,Esplanade des Arts,2 098
+T2,Rebufer,1 986
+T2,St-Priest Hôtel de Ville,1 732
+T2,Boutasse - C. Rousset,1 655
+T2,Desgenettes,1 641
+T2,Salvador Allende,1 150
+T2,Saint-Priest Jules Ferry,1 120
+T2,Saint-Priest Bel Air,1 118
+T2,Cordière,1 032
+T2,Alfred de Vigny,994
+T2,Parc Technologique,976
+T2,Essarts - Iris,884
+T2,Hauts de Feuilly,562
+T3,Part Dieu,9 296
+T3,Vaulx-en-Velin La Soie,8 923
+T3,Dauphiné -Lacassagne,4 550
+T3,Meyzieu Gare,4 448
+T3,Gare de Villeurbanne,3 964
+T3,Reconnaissance - Balzac,3 810
+T3,Décines Centre,2 936
+T3,Meyzieu Z.i.,2 933
+T3,Décines Grand Large,2 800
+T3,Bel Air - Les Brosses,2 775
+T3,Meyzieu les Panettes,844
+T4,Gare Part-Dieu Villette,10 066
+T4,Jet d'Eau - M. France,7 135
+T4,Gare de Vénissieux,7 866
+T4,Charpennes,6 678
+T4,Manufacture Montluc,4 282
+T4,Beauvisage CISL,4 240
+T4,Etats-Unis Viviani,4 043
+T4,Archives Departementales,3 857
+T4,Herriot - Cagne,3 848
+T4,Etats-Unis Tony Garnier,3 424
+T4,Joliot-Curie - M. Sembat,3 229
+T4,Lycee Colbert,2 926
+T4,Venissy,2 800
+T4,Croizat - Paul Bert,2 796
+T4,M. Houël Hôtel de Ville,2 692
+T4,La Doua - Gaston Berger,2 690
+T4,Lycée Lumière,2 585
+T4,Division Leclerc,2 317
+T4,Thiers - Lafayette,2 223
+T4,Maurice Thorez,2 008
+T4,Lycée Jacques Brel,1 867
+T4,Condorcet,1 804
+T4,Le Tonkin,1 747
+T4,La Borelle,1 534
+T4,Université Lyon 1,1 451
+T4,Lenine - Corsiere,1 317
+T4,Darnaise,1 280
+T4,Collège Bellecombe,1 126
+T4,Hop. Feyzin Venissieux,1 006
+T5,Grange blanche,2 541
+T5,Eurexpo Entrée Princ.,924
+T5,Lycee J.P. Sartre,909
+T5,Bron HdV,859
+T5,Les Alizés,799
+T5,Parc du Chêne,708
+T5,De Tassigny - Curial,526
+T5,Boutasse Camille Rousset,440
+T5,Ambroise Paré,398
+T5,Desgenettes,346
+T5,Essarts Iris,247
