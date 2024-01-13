@@ -67,45 +67,67 @@
          * -------------------------------------
          **************************************/
         var metro = d3.json("./data/sytral_tcl_sytral.tclarret_sans_bus.json").then(function (data) {
-            centerlat =( d3.min(data.features, function (d) {
+            centerlat = (d3.min(data.features, function (d) {
                 return d.geometry.coordinates[0][1];
-            })+d3.max(data.features, function (d) {
+            }) + d3.max(data.features, function (d) {
                 return d.geometry.coordinates[0][1];
-            }))/2;
+            })) / 2;
             centerlon = (d3.min(data.features, function (d) {
                 return d.geometry.coordinates[0][0];
-            })+d3.max(data.features, function (d) {
+            }) + d3.max(data.features, function (d) {
                 return d.geometry.coordinates[0][0];
-            }))/2;
+            })) / 2;
 
-            map.setView([centerlat,centerlon]);
+            map.setView([centerlat, centerlon]);
 
             var tram_lines = svg.append("g");
             var metro_lines = svg.append("g");
-            // Affichage des arrets
-            var metro = svg.append("g");
-            metro
+            // Append a group for each metro stop
+            var metro = svg.append("g")
                 .attr("class", "arrets")
-                .selectAll("path")
-                .data(data.features.filter(function(d, i, self) {
-                    // Utilisez une fonction de filtrage pour éviter les doublons
+                .selectAll("g")
+                .data(data.features.filter(function (d, i, self) {
                     return i === self.findIndex((t) => {
-                        if(t.properties.nom === d.properties.nom){
-                            t.properties.nom_ligne=[...new Set(d.properties.nom_ligne.concat(t.properties.nom_ligne))]
+                        if (t.properties.nom === d.properties.nom) {
+                            t.properties.nom_ligne = [...new Set(d.properties.nom_ligne.concat(t.properties.nom_ligne))]
                             return true
-                        }else {
+                        } else {
                             return false
                         }
-                });
+                    });
                 }))
                 .enter()
+                .append("g")
+                .attr("transform", function (d) {
+                    return "translate(" + path.centroid(d) + ")";
+                });
+
+            // Append a pie chart within each group
+            var pie = d3.pie()
+                .sort(null)
+                .value(function (d) { return 1; });
+
+            var arc = d3.arc()
+                .innerRadius(0)
+                .outerRadius(10); // Adjust the outer radius as needed
+
+            metro.selectAll("path")
+                .data(function (d) {
+                    var total = d.properties.nom_ligne.length;
+                    return pie([
+                        { label: "Slice1", value: total / 4 },
+                        { label: "Slice2", value: (3 * total) / 4 }
+                    ]);
+                })
+                .enter()
                 .append("path")
-                .attr("d", path)
-                .attr("fill", "Transparent")
+                .attr("d", arc)
+                .attr("fill", function (d, i) {
+                    return i === 0 ? "red" : "blue";
+                })
                 .attr("stroke", "black")
                 .attr("stroke-width", 1)
                 .style("pointer-events", "all")
-                .attr("class",(d)=>d.properties.nom_ligne.join(" "))
                 .on('mouseover', function(e, d) {
                     // on recupere la position de la souris,
                     // e est l'object event d
@@ -147,38 +169,6 @@
                     // on cache le toolip
                     tooltip.classed('hidden', true);
                 })
-
-                // -----------------------
-                // Affichage des points d'arrets
-                // VERSION NON DEFINITIVE
-                // -----------------------
-                var arrets = svg.append("g");
-                arrets.selectAll("circle")
-                    .data(data.features.filter(function(d, i, self) {
-                        // Utilisez une fonction de filtrage pour éviter les doublons
-                        return i === self.findIndex((t) => {
-                            if(t.properties.nom === d.properties.nom){
-                                t.properties.nom_ligne=[...new Set(d.properties.nom_ligne.concat(t.properties.nom_ligne))]
-                                return true
-                            }else {
-                                return false
-                            }
-                        });
-                    }))
-                    .enter()
-                    .append("circle")
-                    .attr("cx", function(d) {
-                        return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).x
-                    })
-                    .attr("cy", function(d) {
-                        return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).y
-                    })
-                    .attr("r", 3)
-                    .style("pointer-events", "all")  
-                // -----------------------
-                // FIN DE LA
-                // VERSION NON DEFINITIVE
-                // -----------------------
 
 
             /***************************************
