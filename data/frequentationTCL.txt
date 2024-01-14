@@ -26,6 +26,8 @@ Debourg : 10 033
 Place Guichard : 8 935
 Stade de Gerland Le LOU : 6 443
 Brotteaux : 5 468
+Oullins Centre : 0
+St-Genis-Laval Hôp. Sud : 0
 Total : 179 200 voy/j
 
 Ligne : C
@@ -38,7 +40,7 @@ Total : 34 657 voy/j
 
 Ligne : D
 Bellecour : 67 901
-Saxe Gambetta : 36 889
+Saxe - Gambetta : 36 889
 Gorge de Loup : 28 574
 Grange Blanche : 26 669
 Gare de Vaise : 24 282
@@ -46,7 +48,7 @@ Guillotière Gabriel Péri : 18 004
 Sans Souci : 13 404
 Garibaldi : 13 234
 Vieux Lyon : 12 520
-Gare Venissieux : 12 083
+Gare de Vénissieux : 12 083
 Valmy : 10 556
 Mermoz - Pinel : 9 382
 Monplaisir Lumière : 8 935
@@ -80,16 +82,16 @@ Part-Dieu Auditorium : 2 207
 Liberté : 2 173
 ENS Lyon : 2 020
 IUT Feyssine : 1 968
-Bellecombe : 1 312
+Collège Bellecombe : 1 312
 Croix-Luizet : 1 150
 Total : 116 714 voy/j
 
 Ligne : T2
-Grange blanche : 12 418
+Grange Blanche : 12 418
 Perrache : 9 569
 Jean Macé : 9 471
 Bachut - Mairie du 8ème : 7 368
-Jet d'eau Mendes France : 7 723
+Jet d'Eau - M. France : 7 723
 Centre Berthelot : 5 631
 Parilly - Université : 4 571
 Route de Vienne : 4 364
@@ -100,7 +102,7 @@ Europe - Université : 3 068
 Porte des Alpes : 2 935
 Ambroise Paré : 2 520
 Jean XXIII - M. Bastié : 2 482
-Alizés : 2 399
+Les Alizés : 2 399
 Esplanade des Arts : 2 098
 Rebufer : 1 986
 St-Priest Hôtel de Ville : 1 732
@@ -114,10 +116,15 @@ Alfred de Vigny : 994
 Parc Technologique : 976
 Essarts - Iris : 884
 Hauts de Feuilly : 562
+Place des Archives : 0
+Sainte-Blandine : 0
+Hôtel Région Montrochet : 0
+
+
 Total : 101 284 voy/j
 
 Ligne : T3
-Part Dieu : 9 296
+Gare Part-Dieu Villette : 9 296
 Vaulx-en-Velin La Soie : 8 923
 Dauphiné -Lacassagne : 4 550
 Meyzieu Gare : 4 448
@@ -163,15 +170,15 @@ Hop. Feyzin Venissieux : 1 006
 Total : 94 837 Voy/j
 
 Ligne : T5
-Grange blanche : 2 541
+Grange Blanche : 2 541
 Eurexpo Entrée Princ. : 924
 Lycee J.P. Sartre : 909
-Bron HdV : 859
+Bron Hôtel de Ville : 859
 Les Alizés : 799
 Parc du Chêne : 708
 De Tassigny - Curial : 526
-Boutasse Camille Rousset : 440
+Boutasse - C. Rousset : 440
 Ambroise Paré : 398
 Desgenettes : 346
-Essarts Iris : 247
+Essarts - Iris : 247
 Total : 8 667 voy/j
