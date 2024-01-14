@@ -64,6 +64,8 @@
   - Jointure avec les données d'arrêts dans le JSON
 - 1ère version de l'affichage de l'affluence 
 ![V1 affluence](img/V1affluence.png)
+- 2ème version avec affluence globale par station + transparence
+![V2 affluence](img/V2affluence.png)
 
 **Nino :**
 - Première version des pies charts pour l'affluence

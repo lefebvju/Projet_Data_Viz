@@ -241,7 +241,7 @@
                 // On définit le scale du radius pour avoir une taille raisonable
                 var radius = d3.scaleSqrt()
                     .domain([0, maxFrequentation])
-                    .range([2, 10]);
+                    .range([2, 15]);
 
                 // On met à jour le radius en fonction de la fréquentation
                 arrets.selectAll("circle")
@@ -249,6 +249,10 @@
                     .duration(1000)
                     .attr("r", function(d) {
                         return radius(d.properties.sumFrequentation)
+                    })
+
+                    .attr("fill", function(d) {
+                        return "rgba(0,0,0,0.5)"
                     })
 
                 // -----------------------
