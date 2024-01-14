@@ -61,4 +61,11 @@
   - Correction des noms d'arrêts
   - Formattage du fichier
   - Conversion en CSV
+  - Jointure avec les données d'arrêts dans le JSON
+- 1ère version de l'affichage de l'affluence 
+![V1 affluence](img/V1affluence.png)
+
+**Nino :**
+- Première version des pies charts pour l'affluence
+![Pie chart](img/piechart.gif)
 
