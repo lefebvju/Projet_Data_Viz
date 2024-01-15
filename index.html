@@ -38,16 +38,6 @@
         path = d3.geoPath().projection(transform);
 
         // Update map si zoom
-        function update() {
-            d3.selectAll("path").attr("d", path);
-            d3.selectAll("circle")
-                .attr("cx", function(d) {
-                    return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).x
-                })
-                .attr("cy", function(d) {
-                    return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).y
-                })
-        }
 
         // Create Leaflet map
         var map = L.map('map').setView([45.75, 4.85], 12);
@@ -66,6 +56,18 @@
         var sidebar = d3.select('#sidebar');
         var sidebarContainer = d3.select('#sidebar-container');
         var svg=d3.select("svg");
+
+        function update() {
+            svg.selectAll("path").attr("d", path);
+            svg.selectAll("circle")
+                .attr("cx", function(d) {
+                    return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).x
+                })
+                .attr("cy", function(d) {
+                    return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).y
+                })
+        }
+
 
         /***************************************
          * -------------------------------------
