@@ -15,7 +15,11 @@
 
 <body>
 <div id="filter-section"></div>
-    <div id="sidebar-container" class="hidden"><button id="close" onclick="fermerSidebar()"><i class="fas fa-times"></i></button><div id="sidebar"></div>
+    <div id="sidebar-container" class="hidden">
+        <button id="close" onclick="fermerSidebar()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div id="sidebar"></div>
     </div>
     <div id="tooltip" class="hidden tooltip"></div>
     <div id="map"></div>
@@ -25,6 +29,7 @@
          * -- MISE EN PLACE DE LA MAP ---
          * ------------------------------
          *******************************/
+        var colorLigne={}
         // Conversion GEOJSON -> leaflet coordonnées
         function projectPoint(x, y) {
             var point = map.latLngToLayerPoint(new L.LatLng(y, x));
@@ -283,6 +288,7 @@
                     .attr("stroke", d =>{
                         col = d.properties.couleur
                         col = col.split(" ")
+                        colorLigne[d.properties.ligne] = "rgb("+col[0]+","+col[1]+","+col[2]+")"
                         return "rgb("+col[0]+","+col[1]+","+col[2]+")"
                         })
                     .on('mouseover', mouseoverLigne())
@@ -305,6 +311,7 @@
                     .attr("class", "tram_lines")
                     .selectAll("path")
                     .data(data.features.filter(function(d, i, self) {
+                        colorLigne[d.properties.ligne] = d.properties.couleur
                         // Utilisez une fonction de filtrage pour éviter les doublons
                         return i === self.findIndex((t) =>(t.properties.ligne === d.properties.ligne));
                     }))
@@ -318,6 +325,7 @@
                     .attr("stroke", d =>{
                         col = d.properties.couleur
                         col = col.split(" ")
+                        colorLigne[d.properties.ligne] = "rgb("+col[0]+","+col[1]+","+col[2]+")"
                         return "rgb("+col[0]+","+col[1]+","+col[2]+")"
                         })
                     .on('mouseover', mouseoverLigne())

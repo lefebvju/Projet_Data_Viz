@@ -44,17 +44,19 @@ div.tooltip {
 #sidebar-container {
     color: #222;
     background-color: rgba(232, 230, 230, 0.66);
-    padding: .5em;
-    text-shadow: #f5f5f5 0 1px 0;
     border-radius: 2px;
     opacity: 0.9;
     top: 10%;
     left: 2%;
-    width: 300px;
+    width: 30%;
     min-width: 300px;
     height: 80%;
     position: absolute;
     z-index: 600; /* Valeur à ajuster selon vos besoins */
+}
+
+#sidebar *{
+    text-align: center;
 }
 .arrets{
     cursor: pointer;
@@ -84,7 +86,6 @@ div.tooltip {
     position: absolute;
     top: 0;
     right: 0;
-
     z-index: 601;
 }
 
