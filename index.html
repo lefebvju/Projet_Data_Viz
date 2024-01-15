@@ -5,14 +5,18 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="./js/tooltip.js"></script>
     <script src="./js/filter.js"></script>
+    <script src="./js/sidebar.js"></script>
     <link rel="stylesheet" href="./style.css" />
 </head>
 
 
 <body>
 <div id="filter-section"></div>
+    <div id="sidebar-container" class="hidden"><button id="close" onclick="fermerSidebar()"><i class="fas fa-times"></i></button><div id="sidebar"></div>
+    </div>
     <div id="tooltip" class="hidden tooltip"></div>
     <div id="map"></div>
     <script>
@@ -59,6 +63,8 @@
         map.on("moveend", update);
 
         var tooltip = d3.select('#tooltip');
+        var sidebar = d3.select('#sidebar');
+        var sidebarContainer = d3.select('#sidebar-container');
         var svg=d3.select("svg");
 
         /***************************************
@@ -175,7 +181,6 @@
                     }))
                     .enter()
                     .append("circle")
-                    .attr("class","arrets")
                     .attr("cx", function(d) {
                         return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).x
                     })
@@ -185,19 +190,14 @@
                     .attr("r", function(d) {
                         return 2
                     })
-                    .style("pointer-events", "all") 
+                    .style("pointer-events", "all")
                     .attr("class",(d)=>d.properties.nom_ligne.join(" "))
 
+                    .classed("arrets", true)
                     .on('mouseover', function(e, d) {
                     // on recupere la position de la souris,
                     // e est l'object event d
                     var mousePosition = [e.x, e.y];
-                    if (tooltip.classed('click') && tooltip.attr("pointerOn") === d.properties.nom){
-                        return
-                    }else{
-                        tooltip.classed('click', false)
-                        tooltip.attr("pointerOn",null)
-                    }
                     // on affiche le toolip
                     tooltip.classed('hidden', false)
                         // on positionne le tooltip en fonction
@@ -216,28 +216,24 @@
                     var mousePosition = [e.x, e.y];
 
                     // on affiche le toolip
-                    tooltip.classed('click', true)
-                        // on positionne le tooltip en fonction
-                        // de la position de la souris
-                        .attr('style', 'left:' + (mousePosition[0] + 15) +
-                            'px; top:' + (mousePosition[1] - 35) + 'px')
-                        // on recupere le nom de l'etat
-                        .attr("pointerOn",d.properties.nom)
-                        .html("<b>"+d.properties.nom+"</b><br>"+
+
+                    afficherSidebar()
+                    remplirSidebar(d.properties)
+                    /*sidebar.html("<b>"+d.properties.nom+"</b><br>"+
                                 d.properties.commune+"<br>"+
-                                d.properties.nom_ligne+"<br>");
+                                d.properties.nom_ligne+"<br>");*/
 
                 })
                 .on('mouseout', function() {
                     // on cache le toolip
                     tooltip.classed('hidden', true);
-                }) 
+                })
 
                 // Ajustement radius en fonction de la fréquentation en utilisant un scale
                 let maxFrequentation = d3.max(data.features, function(d) {
                     return d.properties.sumFrequentation
                 })
-                
+
                 // On définit le scale du radius pour avoir une taille raisonable
                 var radius = d3.scaleSqrt()
                     .domain([0, maxFrequentation])
