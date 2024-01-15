@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
     <script src="./js/tooltip.js"></script>
     <script src="./js/filter.js"></script>
+    <script src="./js/sidebar.js"></script>
     <link rel="stylesheet" href="./style.css" />
 </head>
 
@@ -32,18 +33,6 @@
 
         // Déclaration de la projection D3 utilisée
         path = d3.geoPath().projection(transform);
-
-        // Update map si zoom
-        function update() {
-            d3.selectAll("path").attr("d", path);
-            d3.selectAll("circle")
-                .attr("cx", function(d) {
-                    return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).x
-                })
-                .attr("cy", function(d) {
-                    return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).y
-                })
-        }
 
         // Create Leaflet map
         var map = L.map('map').setView([45.75, 4.85], 12);
@@ -98,15 +87,26 @@
 
             var tram_lines = svg.append("g");
             var metro_lines = svg.append("g");
-            var metro = svg.append("g")
+
+            var arc = d3.arc()
+                .innerRadius(0)
+                .outerRadius(10); // Adjust the outer radius as needed
+
+            var cumulativeAngle = 0;
+
+            var arrets = svg.append("g")
                 .attr("class", "arrets")
                 .selectAll("g")
-                .data(data.features.filter(function (d, i, self) {
+                .data(data.features.filter(function(d, i, self) {
+                    // Utilisez une fonction de filtrage pour éviter les doublons
                     return i === self.findIndex((t) => {
-                        if (t.properties.nom === d.properties.nom) {
-                            t.properties.nom_ligne = [...new Set(d.properties.nom_ligne.concat(t.properties.nom_ligne))]
+                        if(t.properties.nom === d.properties.nom){
+                            t.properties.nom_ligne=[...new Set(d.properties.nom_ligne.concat(t.properties.nom_ligne))]
+                            // On fusionne les données de fréquentation
+                            t.properties.frequentation = Object.assign({}, t.properties.frequentation, d.properties.frequentation);
+                            t.properties.sumFrequentation = sumFrequentation(t.properties.frequentation)
                             return true
-                        } else {
+                        }else {
                             return false
                         }
                     });
@@ -115,21 +115,17 @@
                 .append("g")
                 .attr("transform", function (d) {
                     return "translate(" + path.centroid(d) + ")";
-                });
-
-
-            var arc = d3.arc()
-                .innerRadius(0)
-                .outerRadius(10); // Adjust the outer radius as needed
-
-            var cumulativeAngle = 0;
-
-            metro.selectAll("path")
+                })
+                .selectAll("path")
                 .data(function (d) {
-                    return [
-                        { label: "Slice1", value: 3 / 4 },
-                        { label: "Slice2", value: 1 / 4 }
-                    ];
+                    var nomLigneArray = d.properties.nom_ligne.sort();
+                    var total = nomLigneArray.length;
+                    
+                    return nomLigneArray.map(function (_, i) {
+                        var value = d.properties.frequentation[nomLigneArray[i]] / d.properties.sumFrequentation;
+                        //TODO: ajouter la couleur correspondante
+                        return { label: "Slice" + (i + 1), value: value, last: i+1 == total};
+                    });
                 })
                 .enter()
                 .append("path")
@@ -139,11 +135,15 @@
                     
                     var arcData = arc({ startAngle: startAngle, endAngle: endAngle });
 
-                    cumulativeAngle = d.label === "Slice1" ? endAngle : 0;
+                    cumulativeAngle = d.last === true ? 0 : endAngle;
                     return arcData;
                 })
                 .attr("fill", function (d, i) {
-                    return d.label === "Slice1" ? "red" : "blue";
+                    // Use a color scale or an array of colors to assign different colors to each slice
+                    var colors = ["purple", "blue", "green", "yellow", "red", "orange", "cyan", "magenta", "brown"];
+                    
+                    // Use the index to select a color from the array
+                    return colors[i % colors.length];
                 })
                 .attr("stroke", "black")
                 .attr("stroke-width", 1)
