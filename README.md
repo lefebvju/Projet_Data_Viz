@@ -77,4 +77,5 @@
 - Modification de la taille des arrêts quand on supprime des lignes
 - Modification du pie chart quand on supprime des lignes
 ![Side bar](img/sidebar.gif)
+- Ajout de l'affichage de la présence ou non d'ascenseurs et escalators
 

@@ -110,6 +110,8 @@
                             // On fusionne les données de fréquentation
                             t.properties.frequentation = Object.assign({}, t.properties.frequentation, d.properties.frequentation);
                             t.properties.sumFrequentation = sumFrequentation(t.properties.frequentation)
+                            t.properties.ascenseur= t.properties.ascenseur || d.properties.ascenseur
+                            t.properties.escalator= t.properties.escalator || d.properties.escalator
                             return true
                         }else {
                             return false

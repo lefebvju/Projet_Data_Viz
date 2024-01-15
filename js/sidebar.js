@@ -24,10 +24,30 @@ function remplirSidebar(data) {
     sidebar.append("h1").text(data.nom);
     sidebar.append("h2").text("Ligne : " + data.nom_ligne.sort().join(", "));
     sidebar.append("div").text(data.adresse);
-    sidebar.append("div").text( data.commune);
-    sidebar.append("div").attr("id","affluence");
+    sidebar.append("div").text(data.commune);
+    let option = sidebar.append("div").style("display", "flex").style("justify-content", "space-evenly").style("margin-top", "10px")
 
-    var  margin = 60
+// Icône pour l'escalator
+    let ascenseurIcon = option.append("div").html("<i class='fas fa-elevator fa-2x' style='color: #1a5fb4;'></i>");
+
+// Icône pour l'ascenseur
+    let escalatorIcon = option.append("div").html("<img src='img/escalator.svg' alt='escalator' width='30' height='30'>");
+
+// Condition pour l'escalator
+    if (!data.escalator) {
+        // Ajouter une croix rouge à l'icône de l'escalator
+        escalatorIcon.append("i").attr("class", "fas fa-ban fa-3x").style("color", "red").style("position", "absolute").style("transform", "translate(-40px, -10px)").style("opacity", "0.7")
+    }
+
+// Condition pour l'ascenseur
+    if (!data.ascenseur) {
+        // Ajouter une croix rouge à l'icône de l'ascenseur
+        ascenseurIcon.append("i").attr("class", "fas fa-ban fa-3x").style("color", "red").style("position", "absolute").style("transform", "translate(-40px, -7px)").style("opacity", "0.7")
+    }
+    sidebar.append("div").attr("id", "affluence");
+
+
+    var margin = 60
     var width = sidebarContainer.node().getBoundingClientRect().width;
     height = width
 
@@ -46,24 +66,25 @@ function remplirSidebar(data) {
     function affichePie() {
 
         svg.html("");
-        if(sumFrequentation(data.frequentation)==0){
+        if (sumFrequentation(data.frequentation) == 0) {
             svg.append("text").text("Pas de données disponibles")
-                .attr("x", width/2)
-                .attr("y", height/2)
+                .attr("x", width / 2)
+                .attr("y", height / 2)
                 .attr("text-anchor", "middle")
                 .attr("font-size", "20px")
                 .attr("fill", "black")
                 .attr("font-weight", "bold")
             return
         }
-    var
-        g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+        var
+            g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
 
-    // Generate the pie
-    var pie = d3.pie()
-        .value(function(d) {
-            return d[1] });
+        // Generate the pie
+        var pie = d3.pie()
+            .value(function (d) {
+                return d[1]
+            });
         // Utiliser Object.entries() pour obtenir un tableau des paires clé-valeur
         var data_ready = pie(Object.entries(frequentation).filter(function (d, i, self) {
             return !list_filter.includes(d[0]);
@@ -73,6 +94,7 @@ function remplirSidebar(data) {
         // Generate the arcs
         var arc = d3.arc()
             .innerRadius(radius * 0.5)         // This is the size of the donut hole
+            .padAngle(.05)
             .outerRadius(radius * 0.8)
 
         //Generate groups
@@ -150,6 +172,7 @@ function remplirSidebar(data) {
 
             .attr("dy", "0.35em")
     }
+
     affichePie()
     refresh.push(affichePie)
 
