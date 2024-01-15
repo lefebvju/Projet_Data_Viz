@@ -96,166 +96,91 @@
 
             var tram_lines = svg.append("g");
             var metro_lines = svg.append("g");
-            // Affichage des arrets
-            // var metro = svg.append("g");
-            // metro
-            //     .attr("class", "arrets")
-            //     .selectAll("path")
-            //     .data(data.features.filter(function(d, i, self) {
-            //         // Utilisez une fonction de filtrage pour éviter les doublons
-            //         return i === self.findIndex((t) => {
-            //             if(t.properties.nom === d.properties.nom){
-            //                 t.properties.nom_ligne=[...new Set(d.properties.nom_ligne.concat(t.properties.nom_ligne))]
-            //                 // On fusionne les données de fréquentation
-            //                 t.properties.frequentation = Object.assign({}, t.properties.frequentation, d.properties.frequentation);
-            //                 return true
-            //             }else {
-            //                 return false
-            //             }
-            //     });
-            //     }))
-            //     .enter()
-            //     .append("path")
-            //     .attr("d", path)
-            //     .attr("fill", "Transparent")
-            //     .attr("stroke", "black")
-            //     .attr("stroke-width", 1)
-            //     .style("pointer-events", "all")
-            //     .attr("class",(d)=>d.properties.nom_ligne.join(" "))
-                // .on('mouseover', function(e, d) {
-                //     // on recupere la position de la souris,
-                //     // e est l'object event d
-                //     var mousePosition = [e.x, e.y];
-                //     if (tooltip.classed('click') && tooltip.attr("pointerOn") === d.properties.nom){
-                //         return
-                //     }else{
-                //         tooltip.classed('click', false)
-                //         tooltip.attr("pointerOn",null)
-                //     }
-                //     // on affiche le toolip
-                //     tooltip.classed('hidden', false)
-                //         // on positionne le tooltip en fonction
-                //         // de la position de la souris
-                //         .attr('style', 'left:' + (mousePosition[0] + 15) +
-                //             'px; top:' + (mousePosition[1] - 35) + 'px')
-                //         // on recupere le nom de l'etat
 
-                //         .html("<b>"+d.properties.nom+"</b><br/>"+"Ligne : "+d.properties.nom_ligne);
+            // -----------------------
+            // Affichage des points d'arrets
+            // -----------------------
+            var arrets = svg.append("g");
+            arrets.selectAll("circle")
+                .data(data.features.filter(function(d, i, self) {
+                    // Utilisez une fonction de filtrage pour éviter les doublons
+                    return i === self.findIndex((t) => {
+                        if(t.properties.nom === d.properties.nom){
+                            t.properties.nom_ligne=[...new Set(d.properties.nom_ligne.concat(t.properties.nom_ligne))]
+                            // On fusionne les données de fréquentation
+                            t.properties.frequentation = Object.assign({}, t.properties.frequentation, d.properties.frequentation);
+                            t.properties.sumFrequentation = sumFrequentation(t.properties.frequentation)
+                            return true
+                        }else {
+                            return false
+                        }
+                    });
+                }))
+                .enter()
+                .append("circle")
+                .attr("cx", function(d) {
+                    return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).x
+                })
+                .attr("cy", function(d) {
+                    return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).y
+                })
+                .attr("r", function(d) {
+                    return 2
+                })
+                .style("pointer-events", "all")
+                .attr("class",(d)=>d.properties.nom_ligne.join(" "))
 
-                // })
-                // .on('click', function(e, d) {
-                //     // on recupere la position de la souris,
-                //     // e est l'object event d
-                //     var mousePosition = [e.x, e.y];
-
-                //     // on affiche le toolip
-                //     tooltip.classed('click', true)
-                //         // on positionne le tooltip en fonction
-                //         // de la position de la souris
-                //         .attr('style', 'left:' + (mousePosition[0] + 15) +
-                //             'px; top:' + (mousePosition[1] - 35) + 'px')
-                //         // on recupere le nom de l'etat
-                //         .attr("pointerOn",d.properties.nom)
-                //         .html("<b>"+d.properties.nom+"</b><br>"+
-                //                 d.properties.commune+"<br>"+
-                //                 d.properties.nom_ligne+"<br>");
-
-                // })
-                // .on('mouseout', function() {
-                //     // on cache le toolip
-                //     tooltip.classed('hidden', true);
-                // })
-
-                // -----------------------
-                // Affichage des points d'arrets
-                // VERSION NON DEFINITIVE
-                // -----------------------
-
-                var arrets = svg.append("g");
-                arrets.selectAll("circle")
-                    .data(data.features.filter(function(d, i, self) {
-                        // Utilisez une fonction de filtrage pour éviter les doublons
-                        return i === self.findIndex((t) => {
-                            if(t.properties.nom === d.properties.nom){
-                                t.properties.nom_ligne=[...new Set(d.properties.nom_ligne.concat(t.properties.nom_ligne))]
-                                // On fusionne les données de fréquentation
-                                t.properties.frequentation = Object.assign({}, t.properties.frequentation, d.properties.frequentation);
-                                t.properties.sumFrequentation = sumFrequentation(t.properties.frequentation)
-                                return true
-                            }else {
-                                return false
-                            }
-                        });
-                    }))
-                    .enter()
-                    .append("circle")
-                    .attr("cx", function(d) {
-                        return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).x
-                    })
-                    .attr("cy", function(d) {
-                        return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).y
-                    })
-                    .attr("r", function(d) {
-                        return 2
-                    })
-                    .style("pointer-events", "all")
-                    .attr("class",(d)=>d.properties.nom_ligne.join(" "))
-
-                    .classed("arrets", true)
-                    .on('mouseover', function(e, d) {
+                .classed("arrets", true)
+                .on('mouseover', function(e, d) {
                     // on recupere la position de la souris,
                     // e est l'object event d
                     var mousePosition = [e.x, e.y];
                     // on affiche le toolip
                     tooltip.classed('hidden', false)
-                        // on positionne le tooltip en fonction
-                        // de la position de la souris
-                        .attr('style', 'left:' + (mousePosition[0] + 15) +
-                            'px; top:' + (mousePosition[1] - 35) + 'px')
-                        // on recupere le nom de l'etat
+                    // on positionne le tooltip en fonction
+                    // de la position de la souris
+                    .attr('style', 'left:' + (mousePosition[0] + 15) +
+                        'px; top:' + (mousePosition[1] - 35) + 'px')
+                    // on recupere le nom de l'etat
 
-                        .html("<b>"+d.properties.nom+"</b><br/>"+"Ligne : "+d.properties.nom_ligne);
+                    .html("<b>"+d.properties.nom+"</b><br/>"+"Ligne : "+d.properties.nom_ligne);
 
+            })
+            .on('click', function(e, d) {
+                afficherSidebar()
+                remplirSidebar(d.properties)
+            })
+            .on('mouseout', function() {
+                // on cache le toolip
+                tooltip.classed('hidden', true);
+            })
+            
+            function afficherArrets()
+            {
+                // Ajustement radius en fonction de la fréquentation en utilisant un scale
+                let maxFrequentation = d3.max(data.features, function (d) {
+                    return sumFrequentation(d.properties.frequentation)
                 })
-                .on('click', function(e, d) {
-                    afficherSidebar()
-                    remplirSidebar(d.properties)
-                })
-                .on('mouseout', function() {
-                    // on cache le toolip
-                    tooltip.classed('hidden', true);
-                })
-                function afficherArrets()
-                {
-                    console.log("affiche")
-                    // Ajustement radius en fonction de la fréquentation en utilisant un scale
-                    let maxFrequentation = d3.max(data.features, function (d) {
-                        return sumFrequentation(d.properties.frequentation)
+
+                // On définit le scale du radius pour avoir une taille raisonable
+                var radius = d3.scaleSqrt()
+                    .domain([0, maxFrequentation])
+                    .range([2, 15]);
+
+                // On met à jour le radius en fonction de la fréquentation
+                arrets.selectAll("circle")
+                    .transition()
+                    .duration(1000)
+                    .attr("r", function (d) {
+                        return radius(sumFrequentation(d.properties.frequentation))
                     })
 
-                    // On définit le scale du radius pour avoir une taille raisonable
-                    var radius = d3.scaleSqrt()
-                        .domain([0, maxFrequentation])
-                        .range([2, 15]);
-
-                    // On met à jour le radius en fonction de la fréquentation
-                    arrets.selectAll("circle")
-                        .transition()
-                        .duration(1000)
-                        .attr("r", function (d) {
-                            return radius(sumFrequentation(d.properties.frequentation))
-                        })
-
-                        .attr("fill", function (d) {
-                            return "rgba(0,0,0,0.5)"
-                        })
-                }
-                afficherArrets()
-                refresh.push(afficherArrets)
-                // -----------------------
-                // FIN DE LA
-                // VERSION NON DEFINITIVE
-                // -----------------------
+                    .attr("fill", function (d) {
+                        return "rgba(0,0,0,0.5)"
+                    })
+            }
+            afficherArrets()
+            refresh.push(afficherArrets)
 
 
             /***************************************

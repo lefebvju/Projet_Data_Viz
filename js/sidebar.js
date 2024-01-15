@@ -22,7 +22,7 @@ function afficherSidebar() {
 function remplirSidebar(data) {
     sidebar.html("");
     sidebar.append("h1").text(data.nom);
-    sidebar.append("h2").text(data.nom_ligne);
+    sidebar.append("h2").text("Ligne : " + data.nom_ligne.sort().join(", "));
     sidebar.append("div").text(data.adresse);
     sidebar.append("div").text( data.commune);
     sidebar.append("div").attr("id","affluence");
