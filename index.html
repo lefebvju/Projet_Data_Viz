@@ -60,6 +60,22 @@
 
         var tooltip = d3.select('#tooltip');
         var svg=d3.select("svg");
+        // BIEN LE METTRE APRES CETTE LIGNE
+        var lines = svg.append("g");
+        var tram_lines = lines.append("g");
+        var metro_lines = lines.append("g");
+
+        function update() {
+            lines.selectAll("path").attr("d", path);
+            lines.selectAll("circle")
+                .attr("cx", function(d) {
+                    return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).x
+                })
+                .attr("cy", function(d) {
+                    return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).y
+                })
+        }
+
 
         /***************************************
          * -------------------------------------
@@ -82,7 +98,6 @@
 
             var tram_lines = svg.append("g");
             var metro_lines = svg.append("g");
-            // Append a group for each metro stop
             var metro = svg.append("g")
                 .attr("class", "arrets")
                 .selectAll("g")
@@ -102,80 +117,39 @@
                     return "translate(" + path.centroid(d) + ")";
                 });
 
-            // Append a pie chart within each group
-            var pie = d3.pie()
-                .sort(null)
-                .value(function (d) { return 1; });
 
             var arc = d3.arc()
                 .innerRadius(0)
                 .outerRadius(10); // Adjust the outer radius as needed
 
+            var cumulativeAngle = 0;
+
             metro.selectAll("path")
                 .data(function (d) {
-                    var total = d.properties.nom_ligne.length;
-                    return pie([
-                        { label: "Slice1", value: total / 4 },
-                        { label: "Slice2", value: (3 * total) / 4 }
-                    ]);
+                    return [
+                        { label: "Slice1", value: 3 / 4 },
+                        { label: "Slice2", value: 1 / 4 }
+                    ];
                 })
                 .enter()
                 .append("path")
-                .attr("d", arc)
+                .attr("d", function (d) {
+                    var startAngle = cumulativeAngle;
+                    var endAngle = 2 * Math.PI * d.value + cumulativeAngle;
+                    
+                    var arcData = arc({ startAngle: startAngle, endAngle: endAngle });
+
+                    cumulativeAngle = d.label === "Slice1" ? endAngle : 0;
+                    return arcData;
+                })
                 .attr("fill", function (d, i) {
-                    return i === 0 ? "red" : "blue";
+                    return d.label === "Slice1" ? "red" : "blue";
                 })
                 .attr("stroke", "black")
                 .attr("stroke-width", 1)
                 .style("pointer-events", "all")
-                .on('mouseover', function(e, d) {
-                    // on recupere la position de la souris,
-                    // e est l'object event d
-                    var mousePosition = [e.x, e.y];
-                    if (tooltip.classed('click') && tooltip.attr("pointerOn") === d.properties.nom){
-                        return
-                    }else{
-                        tooltip.classed('click', false)
-                        tooltip.attr("pointerOn",null)
-                    }
-                    // on affiche le toolip
-                    tooltip.classed('hidden', false)
-                        // on positionne le tooltip en fonction
-                        // de la position de la souris
-                        .attr('style', 'left:' + (mousePosition[0] + 15) +
-                            'px; top:' + (mousePosition[1] - 35) + 'px')
-                        // on recupere le nom de l'etat
-
-                        .html("<b>"+d.properties.nom+"</b><br/>"+"Ligne : "+d.properties.nom_ligne);
-
-                })
-                .on('click', function(e, d) {
-                    // on recupere la position de la souris,
-                    // e est l'object event d
-                    var mousePosition = [e.x, e.y];
-
-                    // on affiche le toolip
-                    tooltip.classed('click', true)
-                        // on positionne le tooltip en fonction
-                        // de la position de la souris
-                        .attr('style', 'left:' + (mousePosition[0] + 15) +
-                            'px; top:' + (mousePosition[1] - 35) + 'px')
-                        // on recupere le nom de l'etat
-                        .attr("pointerOn",d.properties.nom)
-                        .html("<b>"+d.properties.nom+"</b><br>"+d.properties.commune+"<br>"+d.properties.nom_ligne);
-
-                })
-                .on('mouseout', function() {
-                    // on cache le toolip
-                    tooltip.classed('hidden', true);
-                })
 
 
-            /***************************************
-             * -------------------------------------
-             * -- Affichage des lignes de métros ---
-             * -------------------------------------
-             **************************************/
             d3.json("./data/sytral_tcl_sytral.tcllignemetrofuni_2_0_0.json").then(function (data) {
 
                 metro_lines
