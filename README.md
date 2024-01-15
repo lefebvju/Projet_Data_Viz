@@ -71,3 +71,10 @@
 - Première version des pies charts pour l'affluence
 ![Pie chart](img/piechart.gif)
 
+**Julien :**
+- Ajout d'une fenetre avec les informations de l'arrêt
+- Ajout d'un pie chart pour l'affluence avec le détail de chaque ligne et le cumul
+- Modification de la taille des arrêts quand on supprime des lignes
+- Modification du pie chart quand on supprime des lignes
+![Side bar](img/sidebar.gif)
+
