@@ -179,7 +179,7 @@
                                 t.properties.nom_ligne=[...new Set(d.properties.nom_ligne.concat(t.properties.nom_ligne))]
                                 // On fusionne les données de fréquentation
                                 t.properties.frequentation = Object.assign({}, t.properties.frequentation, d.properties.frequentation);
-                                t.properties.sumFrequentation = d3.sum(Object.values(t.properties.frequentation))
+                                t.properties.sumFrequentation = sumFrequentation(t.properties.frequentation)
                                 return true
                             }else {
                                 return false
@@ -235,10 +235,12 @@
                     // on cache le toolip
                     tooltip.classed('hidden', true);
                 })
-
+                function afficherArrets()
+            {
+                console.log("affiche")
                 // Ajustement radius en fonction de la fréquentation en utilisant un scale
-                let maxFrequentation = d3.max(data.features, function(d) {
-                    return d.properties.sumFrequentation
+                let maxFrequentation = d3.max(data.features, function (d) {
+                    return sumFrequentation(d.properties.frequentation)
                 })
 
                 // On définit le scale du radius pour avoir une taille raisonable
@@ -250,14 +252,15 @@
                 arrets.selectAll("circle")
                     .transition()
                     .duration(1000)
-                    .attr("r", function(d) {
-                        return radius(d.properties.sumFrequentation)
+                    .attr("r", function (d) {
+                        return radius(sumFrequentation(d.properties.frequentation))
                     })
 
-                    .attr("fill", function(d) {
+                    .attr("fill", function (d) {
                         return "rgba(0,0,0,0.5)"
                     })
-
+            }
+            afficherArrets()
                 // -----------------------
                 // FIN DE LA
                 // VERSION NON DEFINITIVE
@@ -296,7 +299,7 @@
                         d3.select(this).attr("stroke-width",2)
                         tooltip.classed('hidden', true);
                     })
-                    addFilter(data)
+                    addFilter(data, afficherArrets)
 
             });
 
@@ -333,10 +336,23 @@
                         d3.select(this).attr("stroke-width",2)
                         tooltip.classed('hidden', true);
                     });
-                addFilter(data)
+                addFilter(data, afficherArrets)
 
             });
         });
+
+        sumFrequentation = function (freq) {
+                let somme = 0;
+
+                for (let cle in freq) {
+                    if (!list_filter.includes(cle)) {
+                        somme += freq[cle];
+                    }
+                }
+
+                return somme;
+
+        }
     </script>
 
 </body>

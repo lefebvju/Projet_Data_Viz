@@ -1,5 +1,6 @@
 var list_filter = []
-function addFilter(data){
+
+function addFilter(data, onchange=()=>{}){
         var filter=d3.select("#filter-section")
             filter.selectAll()
             .data(data.features.filter(function(d, i, self) {
@@ -44,6 +45,7 @@ function addFilter(data){
                         })
 
                     }
-                })
 
+                    onchange()
+                })
 }
