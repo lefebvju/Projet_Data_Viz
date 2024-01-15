@@ -25,7 +25,7 @@ function remplirSidebar(data) {
     sidebar.append("h2").text("Ligne : " + data.nom_ligne.sort().join(", "));
     sidebar.append("div").text(data.adresse);
     sidebar.append("div").text(data.commune);
-    let option = sidebar.append("div").style("display", "flex").style("justify-content", "space-evenly").style("margin-top", "10px")
+    let option = sidebar.append("div").style("display", "flex").style("justify-content", "space-evenly").style("margin","20px").style("border-bottom", "1px solid black").style("padding-bottom", "20px").style("padding-top", "10px")
 
 // Icône pour l'escalator
     let ascenseurIcon = option.append("div").html("<i class='fas fa-elevator fa-2x' style='color: #1a5fb4;'></i>");
@@ -44,12 +44,12 @@ function remplirSidebar(data) {
         // Ajouter une croix rouge à l'icône de l'ascenseur
         ascenseurIcon.append("i").attr("class", "fas fa-ban fa-3x").style("color", "red").style("position", "absolute").style("transform", "translate(-40px, -7px)").style("opacity", "0.7")
     }
-    sidebar.append("div").attr("id", "affluence");
+    sidebar.append("div").attr("id", "affluence").append("text").text("Affluence de la station").style("font-size","18px").style("text-align", "center").style("text-decoration", "underline");
 
 
     var margin = 60
     var width = sidebarContainer.node().getBoundingClientRect().width;
-    height = width
+    var height = width-2*margin
 
     var svg = d3.select("#affluence")
         .append("svg")
@@ -57,7 +57,7 @@ function remplirSidebar(data) {
         .attr("height", height)
 
     // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
-    var radius = Math.min(width, height) / 2 - margin
+    var radius = width / 2 - margin
 
     // append the svg object to the div called 'my_dataviz'
     var frequentation = data.frequentation
@@ -171,6 +171,7 @@ function remplirSidebar(data) {
             })
 
             .attr("dy", "0.35em")
+
     }
 
     affichePie()
