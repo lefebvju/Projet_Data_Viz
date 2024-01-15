@@ -44,7 +44,18 @@ function remplirSidebar(data) {
 
 
     function affichePie() {
+
         svg.html("");
+        if(sumFrequentation(data.frequentation)==0){
+            svg.append("text").text("Pas de données disponibles")
+                .attr("x", width/2)
+                .attr("y", height/2)
+                .attr("text-anchor", "middle")
+                .attr("font-size", "20px")
+                .attr("fill", "black")
+                .attr("font-weight", "bold")
+            return
+        }
     var
         g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
