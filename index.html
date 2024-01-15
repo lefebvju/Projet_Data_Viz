@@ -29,6 +29,7 @@
          * -- MISE EN PLACE DE LA MAP ---
          * ------------------------------
          *******************************/
+        var refresh = []
         var colorLigne={}
         // Conversion GEOJSON -> leaflet coordonnées
         function projectPoint(x, y) {
@@ -217,50 +218,40 @@
 
                 })
                 .on('click', function(e, d) {
-                    console.log(d.properties)
-                    // on recupere la position de la souris,
-                    // e est l'object event d
-                    var mousePosition = [e.x, e.y];
-
-                    // on affiche le toolip
-
                     afficherSidebar()
                     remplirSidebar(d.properties)
-                    /*sidebar.html("<b>"+d.properties.nom+"</b><br>"+
-                                d.properties.commune+"<br>"+
-                                d.properties.nom_ligne+"<br>");*/
-
                 })
                 .on('mouseout', function() {
                     // on cache le toolip
                     tooltip.classed('hidden', true);
                 })
                 function afficherArrets()
-            {
-                console.log("affiche")
-                // Ajustement radius en fonction de la fréquentation en utilisant un scale
-                let maxFrequentation = d3.max(data.features, function (d) {
-                    return sumFrequentation(d.properties.frequentation)
-                })
-
-                // On définit le scale du radius pour avoir une taille raisonable
-                var radius = d3.scaleSqrt()
-                    .domain([0, maxFrequentation])
-                    .range([2, 15]);
-
-                // On met à jour le radius en fonction de la fréquentation
-                arrets.selectAll("circle")
-                    .transition()
-                    .duration(1000)
-                    .attr("r", function (d) {
-                        return radius(sumFrequentation(d.properties.frequentation))
+                {
+                    console.log("affiche")
+                    // Ajustement radius en fonction de la fréquentation en utilisant un scale
+                    let maxFrequentation = d3.max(data.features, function (d) {
+                        return sumFrequentation(d.properties.frequentation)
                     })
 
-                    .attr("fill", function (d) {
-                        return "rgba(0,0,0,0.5)"
-                    })
-            }
-            afficherArrets()
+                    // On définit le scale du radius pour avoir une taille raisonable
+                    var radius = d3.scaleSqrt()
+                        .domain([0, maxFrequentation])
+                        .range([2, 15]);
+
+                    // On met à jour le radius en fonction de la fréquentation
+                    arrets.selectAll("circle")
+                        .transition()
+                        .duration(1000)
+                        .attr("r", function (d) {
+                            return radius(sumFrequentation(d.properties.frequentation))
+                        })
+
+                        .attr("fill", function (d) {
+                            return "rgba(0,0,0,0.5)"
+                        })
+                }
+                afficherArrets()
+                refresh.push(afficherArrets)
                 // -----------------------
                 // FIN DE LA
                 // VERSION NON DEFINITIVE
@@ -299,7 +290,7 @@
                         d3.select(this).attr("stroke-width",2)
                         tooltip.classed('hidden', true);
                     })
-                    addFilter(data, afficherArrets)
+                    addFilter(data, refresh)
 
             });
 
@@ -336,23 +327,12 @@
                         d3.select(this).attr("stroke-width",2)
                         tooltip.classed('hidden', true);
                     });
-                addFilter(data, afficherArrets)
+                addFilter(data, refresh)
 
             });
         });
 
-        sumFrequentation = function (freq) {
-                let somme = 0;
 
-                for (let cle in freq) {
-                    if (!list_filter.includes(cle)) {
-                        somme += freq[cle];
-                    }
-                }
-
-                return somme;
-
-        }
     </script>
 
 </body>
