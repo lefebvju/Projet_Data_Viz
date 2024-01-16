@@ -110,7 +110,7 @@ function remplirSidebar(data) {
         //Draw arc paths
         arcs.append("path")
             .attr("fill", function (d, i) {
-                return colorLigne[d.data[0]];
+                return infoLigne[d.data[0]].color;
             })
             .attr("d", arc);
 

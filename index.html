@@ -15,6 +15,7 @@
 
 <body>
 <div id="filter-section"></div>
+<div id="freqLigne"></div>
     <div id="sidebar-container" class="hidden">
         <button id="close" onclick="fermerSidebar()">
             <i class="fas fa-times"></i>
@@ -22,6 +23,7 @@
         <div id="sidebar"></div>
     </div>
     <div id="tooltip" class="hidden tooltip"></div>
+
     <div id="map"></div>
     <script>
         /********************************
@@ -30,7 +32,7 @@
          * ------------------------------
          *******************************/
         var refresh = []
-        var colorLigne={}
+        var infoLigne={}
         // Conversion GEOJSON -> leaflet coordonnées
         function projectPoint(x, y) {
             var point = map.latLngToLayerPoint(new L.LatLng(y, x));
@@ -103,6 +105,14 @@
             var arrets = svg.append("g");
             arrets.selectAll("circle")
                 .data(data.features.filter(function(d, i, self) {
+                   for (let ligne in d.properties.frequentation) {
+
+                       if (infoLigne[ligne]) {
+                           infoLigne[ligne].frequentation += d.properties.frequentation[ligne]
+                       } else {
+                           infoLigne[ligne] = {frequentation: d.properties.frequentation[ligne]}
+                       }
+                   }
                     // Utilisez une fonction de filtrage pour éviter les doublons
                     return i === self.findIndex((t) => {
                         if(t.properties.nom === d.properties.nom){
@@ -110,6 +120,7 @@
                             // On fusionne les données de fréquentation
                             t.properties.frequentation = Object.assign({}, t.properties.frequentation, d.properties.frequentation);
                             t.properties.sumFrequentation = sumFrequentation(t.properties.frequentation)
+
                             t.properties.ascenseur= t.properties.ascenseur || d.properties.ascenseur
                             t.properties.escalator= t.properties.escalator || d.properties.escalator
                             return true
@@ -209,7 +220,7 @@
                     .attr("stroke", d =>{
                         col = d.properties.couleur
                         col = col.split(" ")
-                        colorLigne[d.properties.ligne] = "rgb("+col[0]+","+col[1]+","+col[2]+")"
+                        infoLigne[d.properties.ligne].color = "rgb("+col[0]+","+col[1]+","+col[2]+")"
                         return "rgb("+col[0]+","+col[1]+","+col[2]+")"
                         })
                     .on('mouseover', mouseoverLigne())
@@ -217,7 +228,7 @@
                         d3.select(this).attr("stroke-width",2)
                         tooltip.classed('hidden', true);
                     })
-                    addFilter(data, refresh)
+                    //addFilter(data, refresh)
 
             });
 
@@ -232,7 +243,6 @@
                     .attr("class", "tram_lines")
                     .selectAll("path")
                     .data(data.features.filter(function(d, i, self) {
-                        colorLigne[d.properties.ligne] = d.properties.couleur
                         // Utilisez une fonction de filtrage pour éviter les doublons
                         return i === self.findIndex((t) =>(t.properties.ligne === d.properties.ligne));
                     }))
@@ -246,7 +256,7 @@
                     .attr("stroke", d =>{
                         col = d.properties.couleur
                         col = col.split(" ")
-                        colorLigne[d.properties.ligne] = "rgb("+col[0]+","+col[1]+","+col[2]+")"
+                        infoLigne[d.properties.ligne].color = "rgb("+col[0]+","+col[1]+","+col[2]+")"
                         return "rgb("+col[0]+","+col[1]+","+col[2]+")"
                         })
                     .on('mouseover', mouseoverLigne())
@@ -254,7 +264,8 @@
                         d3.select(this).attr("stroke-width",2)
                         tooltip.classed('hidden', true);
                     });
-                addFilter(data, refresh)
+                addFilter(refresh)
+                addfreq()
 
             });
         });

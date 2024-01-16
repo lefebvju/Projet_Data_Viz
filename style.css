@@ -86,6 +86,15 @@ div.tooltip {
     position: absolute;
     top: 0;
     right: 0;
-    z-index: 601;
+    z-index: 600;
 }
+
+#freqLigne{
+    position: absolute;
+    top: 0px;
+    right: 0;
+    z-index: 598;
+    pointer-events: none;
+}
+
 
