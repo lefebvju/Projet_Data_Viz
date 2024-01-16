@@ -93,7 +93,18 @@ div.tooltip {
 
 #legend-section{
     position: absolute;
-    top: 0;
+    bottom: 5%;
     left: 0;
     z-index: 601;
+    height: 250px;
+}
+
+#title-legend{
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#legend-section .svg-container{
+    height: 500px;
 }

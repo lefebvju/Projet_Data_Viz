@@ -16,7 +16,9 @@
 
 <body>
 <div id="filter-section"></div>
-<div id="legend-section"></div>
+<div id="legend-section">
+    <div id="title-legend"> Légende :</div>
+</div>
     <div id="sidebar-container" class="hidden">
         <button id="close" onclick="fermerSidebar()">
             <i class="fas fa-times"></i>
@@ -169,9 +171,18 @@
             })
 
             // Légende
-            svg.append("g")
+            legende_Pos = d3.select("#legend-section")   
+
+
+            legende_Pos.append("div")
+                    .attr("class", "svg-container")
+                    .append("svg")
+                    .attr("width", 200)
+                    .attr("height", 500)
+                    .append("g")
                     .attr("class", "legendSize")
-                    .attr("transform", "translate(300,450)")
+                    .attr("overflow", "visible")
+                    .attr("transform", "translate(20,20)")
             
             function afficherArrets()
             {
@@ -204,7 +215,6 @@
 
                 // On affiche la légende
                 d3.select(".legendSize")
-                    .attr("transform", "translate(300,450)")
                     .call(sizeLegend, {
                         sizeScale: radiusScale,
                         spacing: 30 + 15*(mapZoom-12),
