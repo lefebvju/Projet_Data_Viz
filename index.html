@@ -9,6 +9,7 @@
     <script src="./js/tooltip.js"></script>
     <script src="./js/filter.js"></script>
     <script src="./js/sidebar.js"></script>
+    <script src="./js/legend.js"></script>
     <link rel="stylesheet" href="./style.css" />
 </head>
 
@@ -65,7 +66,7 @@
 
         function update() {
             svg.selectAll("path").attr("d", path);
-            svg.selectAll("circle")
+            svg.selectAll(".arrets")
                 .attr("cx", function(d) {
                     return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).x
                 })
@@ -165,7 +166,7 @@
                 })
 
                 // On définit le scale du radius pour avoir une taille raisonable
-                var radius = d3.scaleSqrt()
+                var radiusScale = d3.scaleSqrt()
                     .domain([0, maxFrequentation])
                     .range([2, 15]);
 
@@ -174,12 +175,24 @@
                     .transition()
                     .duration(1000)
                     .attr("r", function (d) {
-                        return radius(sumFrequentation(d.properties.frequentation))
+                        return radiusScale(sumFrequentation(d.properties.frequentation))
                     })
 
                     .attr("fill", function (d) {
                         return "rgba(0,0,0,0.5)"
                     })
+
+                // On affiche la légende
+                svg.append("g")
+                    .attr("class", "legendSize")
+                    .attr("transform", "translate(300,450)")
+                    .call(sizeLegend, {
+                        sizeScale: radiusScale,
+                        spacing: 30,
+                        textOffset: 20,
+                        numTicks: 10,
+                        circleFill: "rgba(0,0,0,0.5)",
+                    });
             }
             afficherArrets()
             refresh.push(afficherArrets)
