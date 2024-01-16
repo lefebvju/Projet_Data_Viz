@@ -8,7 +8,20 @@ sumFrequentation = function (freq) {
     }
 
     return somme;
+}
 
+minFreq = function (freq) {
+    let min = 1000000;
+
+    for (let cle in freq) {
+        if (!list_filter.includes(cle)) {
+            if (freq[cle] < min) {
+                min = freq[cle];
+            }
+        }
+    }
+
+    return min;
 }
 
 function fermerSidebar() {

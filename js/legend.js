@@ -7,8 +7,8 @@ const sizeLegend = (selection, props) => {
         circleFill,
     } = props;
 
-    console.log(sizeScale.domain());
-    console.log(sizeScale.ticks().filter(d => d !== 0));
+    // console.log(sizeScale.domain());
+    // console.log(sizeScale.ticks().filter(d => d !== 0));
 
     const ticks = sizeScale.ticks(numTicks).reverse();
 

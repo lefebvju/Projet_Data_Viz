@@ -180,10 +180,14 @@
                     return sumFrequentation(d.properties.frequentation)
                 })
 
+                let minFrequentation = d3.min(data.features, function (d) {
+                    return minFreq(d.properties.frequentation)
+                })
+
                 // On définit le scale du radius pour avoir une taille raisonable
                 rangemax = 15 + 10*(mapZoom-12)
                 var radiusScale = d3.scaleSqrt()
-                    .domain([0, maxFrequentation])
+                    .domain([minFrequentation, maxFrequentation])
                     .range([2, rangemax]);
 
                 // On met à jour le radius en fonction de la fréquentation
@@ -191,7 +195,7 @@
                     .transition()
                     .duration(1000)
                     .attr("r", function (d) {
-                        return radiusScale(sumFrequentation(d.properties.frequentation))
+                        return Math.abs(radiusScale(sumFrequentation(d.properties.frequentation)))
                     })
 
                     .attr("fill", function (d) {
