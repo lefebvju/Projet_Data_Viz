@@ -89,3 +89,11 @@ div.tooltip {
     z-index: 601;
 }
 
+
+
+#legend-section{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 601;
+}

@@ -16,6 +16,7 @@
 
 <body>
 <div id="filter-section"></div>
+<div id="legend-section"></div>
     <div id="sidebar-container" class="hidden">
         <button id="close" onclick="fermerSidebar()">
             <i class="fas fa-times"></i>
@@ -166,6 +167,11 @@
                 // on cache le toolip
                 tooltip.classed('hidden', true);
             })
+
+            // Légende
+            svg.append("g")
+                    .attr("class", "legendSize")
+                    .attr("transform", "translate(300,450)")
             
             function afficherArrets()
             {
@@ -193,14 +199,13 @@
                     })
 
                 // On affiche la légende
-                svg.append("g")
-                    .attr("class", "legendSize")
+                d3.select(".legendSize")
                     .attr("transform", "translate(300,450)")
                     .call(sizeLegend, {
                         sizeScale: radiusScale,
-                        spacing: 30,
+                        spacing: 30 + 15*(mapZoom-12),
                         textOffset: 20,
-                        numTicks: 10,
+                        numTicks: 5,
                         circleFill: "rgba(0,0,0,0.5)",
                     });
             }

@@ -16,7 +16,8 @@ const sizeLegend = (selection, props) => {
         .data(ticks);
     
     const groupsEnter = groups
-        .enter().append('g')
+        .enter()
+        .append('g')
             .attr('class', 'tick');
 
     groupsEnter
@@ -34,7 +35,7 @@ const sizeLegend = (selection, props) => {
     
     groupsEnter.append('text')
         .merge(groups.select('text'))
-            .text(d => d)
+            .text(d => d.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "))
             .attr('dy', '0.32em')
             .attr('x', d => sizeScale(d) + textOffset);
 }
