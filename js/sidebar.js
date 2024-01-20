@@ -201,10 +201,9 @@ function remplirSidebar(data) {
     }
 
 
-    // set the dimensions and margins of the graph
     var margin = {top: 30, right: 30, bottom: 100, left: 60};
     var width = sidebarContainer.node().getBoundingClientRect().width
-    var height = width
+    var height = sidebarContainer.node().getBoundingClientRect().height / 2
     width = width - margin.left - margin.right,
         height = height - margin.top - margin.bottom;
 

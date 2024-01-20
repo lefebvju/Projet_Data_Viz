@@ -79,3 +79,9 @@
 ![Side bar](img/sidebar.gif)
 - Ajout de l'affichage de la présence ou non d'ascenseurs et escalators
 
+### Semaine 9-16 janvier
+**Julien :**
+- Ajout d'un barplot pour afficher les affluences des ligne
+- Ajout d'un bouton pour sélectionner et désélectionner toutes les lignes
+- Ajout d'un bouton et d'une page pour afficher les crédits
+- Ajout d'une visualisation de l'affluence des stations d'une ligne dans la side bar
