@@ -100,6 +100,15 @@ function addFilter(onchange=[]){
         }
 
     })
+    filter.append("div")
+        .attr("class", "credits")
+        .style("background-color", "rgb(180, 180, 180)")
+        .html("<i class='fas fa-info fa-2x' ></i>")
+        .on('click', function(e, d) {
+            //ouvrir page crédit.html dans la meme page
+            window.open("credit.html", "_self");
+            }
+        )
 
 
 

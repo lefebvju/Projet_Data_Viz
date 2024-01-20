@@ -2,9 +2,6 @@ function mouseover(affichageTooltip) {
     return function f(e, d) {
         d3.select(this).attr("stroke-width", 5)
         var mousePosition = [e.x, e.y];
-        col = d.properties.couleur
-        col = col.split(" ")
-        col = "rgb(" + col[0] + "," + col[1] + "," + col[2] + ")"
         // on affiche le toolip
         tooltip.classed('hidden', false)
             // on positionne le tooltip en fonction
