@@ -25,7 +25,7 @@ function remplirSidebar(data) {
     sidebar.append("h2").text("Ligne : " + data.nom_ligne.sort().join(", "));
     sidebar.append("div").text(data.adresse);
     sidebar.append("div").text(data.commune);
-    let option = sidebar.append("div").style("display", "flex").style("justify-content", "space-evenly").style("margin","20px").style("border-bottom", "1px solid black").style("padding-bottom", "20px").style("padding-top", "10px")
+    let option = sidebar.append("div").style("display", "flex").style("justify-content", "space-evenly").style("margin", "20px").style("margin-bottom","5px").style("border-bottom", "1px solid black").style("padding-bottom", "20px").style("padding-top", "10px")
 
 // Icône pour l'escalator
     let ascenseurIcon = option.append("div").html("<i class='fas fa-elevator fa-2x' style='color: #1a5fb4;'></i>");
@@ -46,18 +46,33 @@ function remplirSidebar(data) {
     }
 
 
-
-    var affluence=sidebar.append("div").attr("id", "affluence")
-    var btnAffluence=affluence.append("div").attr("id","boutonAffluence")
-        btnAffluence.append("div").html("Station").on("click", function () { svgStation.style("display", "block"); d3.select("#affluenceLigne").style("display", "none"); d3.select(this).style("color", "black"); d3.select("#boutonAffluenceLigne").style("color", "grey"); refresh.push(affichePie); affichePie();});
-    btnAffluence.append("div").style("color", "grey").html("Ligne").attr("id","boutonAffluenceLigne").on("click", function () { svgStation.style("display", "none"); d3.select("#affluenceLigne").style("display", "block"); d3.select(this).style("color", "black"); d3.select("#boutonAffluence div").style("color", "grey");  refresh = refresh.filter(function (value, index, arr) { return value != affichePie; }); afficheBar();});
-        affluence.append("div").attr("id", "affluenceStation")
+    var affluence = sidebar.append("div").attr("id", "affluence")
+    var btnAffluence = affluence.append("div").attr("id", "boutonAffluence")
+    btnAffluence.append("div").html("Station").on("click", function () {
+        svgStation.style("display", "block");
+        d3.select("#affluenceLigne").style("display", "none");
+        d3.select(this).style("color", "black");
+        d3.select("#boutonAffluenceLigne").style("color", "grey");
+        refresh.push(affichePie);
+        affichePie();
+    });
+    btnAffluence.append("div").style("color", "grey").html("Ligne").attr("id", "boutonAffluenceLigne").on("click", function () {
+        svgStation.style("display", "none");
+        d3.select("#affluenceLigne").style("display", "block");
+        d3.select(this).style("color", "black");
+        d3.select("#boutonAffluence div").style("color", "grey");
+        refresh = refresh.filter(function (value, index, arr) {
+            return value != affichePie;
+        });
+        afficheBar();
+    });
+    affluence.append("div").attr("id", "affluenceStation")
     affluence.append("div").attr("id", "affluenceLigne")
 
 
     var margin = 60
     var width = sidebarContainer.node().getBoundingClientRect().width;
-    var height = width-2*margin
+    var height = width - 2 * margin
 
     var svgStation = d3.select("#affluenceStation")
         .append("svg")
@@ -73,8 +88,8 @@ function remplirSidebar(data) {
 
     function affichePie() {
         var margin = 60
-    var width = sidebarContainer.node().getBoundingClientRect().width;
-    var height = width-2*margin
+        var width = sidebarContainer.node().getBoundingClientRect().width;
+        var height = width - 2 * margin
 
         svgStation.html("");
         if (sumFrequentation(data.frequentation) == 0) {
@@ -186,46 +201,48 @@ function remplirSidebar(data) {
     }
 
 
-        // set the dimensions and margins of the graph
-        var margin = {top: 30, right: 30, bottom: 100, left: 60};
+    // set the dimensions and margins of the graph
+    var margin = {top: 30, right: 30, bottom: 100, left: 60};
     var width = sidebarContainer.node().getBoundingClientRect().width
     var height = width
     width = width - margin.left - margin.right,
         height = height - margin.top - margin.bottom;
 
-        // append the svg object to the body of the page
-       var affluenceLigne = d3.select("#affluenceLigne")
-            .style("display", "none")
-    var btnLigne=affluenceLigne.append("div").attr("id","boutonLigne")
-    for (let lign in data.nom_ligne){
+    // append the svg object to the body of the page
+    var affluenceLigne = d3.select("#affluenceLigne")
+        .style("display", "none")
+    var btnLigne = affluenceLigne.append("div").attr("id", "boutonLigne")
+    for (let lign in data.nom_ligne) {
 
         btnLigne.append("div")
             .html(data.nom_ligne[lign])
-            .style("background-color", ()=>{
-                if(lign==0){
+            .style("background-color", () => {
+                if (lign == 0) {
                     return infoLigne[data.nom_ligne[lign]].color
-                }else{
+                } else {
                     return "grey"
-                }})
-            .attr("class","choixLigne")
+                }
+            })
+            .attr("class", "choixLigne")
             .on("click", function () {
-                d3.selectAll(".choixLigne").style("background-color", "grey"); d3.select(this).style("background-color", infoLigne[data.nom_ligne[lign]].color); afficheBar(data.nom_ligne[lign]);});
+                d3.selectAll(".choixLigne").style("background-color", "grey");
+                d3.select(this).style("background-color", infoLigne[data.nom_ligne[lign]].color);
+                afficheBar(data.nom_ligne[lign]);
+            });
     }
-    var svgLigne =affluenceLigne.append("svg")
+    var svgLigne = affluenceLigne.append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform",
-        "translate(" + margin.left + "," + margin.top + ")");
+            "translate(" + margin.left + "," + margin.top + ")");
 
 
-
-
-    function afficheBar(ligne=data.nom_ligne[0]) {
+    function afficheBar(ligne = data.nom_ligne[0]) {
 
         var margin = {top: 30, right: 30, bottom: 100, left: 60};
         var width = sidebarContainer.node().getBoundingClientRect().width
-        var height = sidebarContainer.node().getBoundingClientRect().height/2
+        var height = sidebarContainer.node().getBoundingClientRect().height / 2
         width = width - margin.left - margin.right,
             height = height - margin.top - margin.bottom;
         svgLigne.html("");
@@ -233,40 +250,42 @@ function remplirSidebar(data) {
             g = svgLigne.append("g");
         var stations = infoLigne[ligne].stations;
 // X axis
-            const x = d3.scaleBand()
-                .range([  width,0 ])
-                .domain(stations.map(d => d.nom))
-                .padding(0.2);
+        const x = d3.scaleBand()
+            .range([width, 0])
+            .domain(stations.map(d => d.nom))
+            .padding(0.2);
         svgLigne.append("g")
-                .attr("transform", `translate(0, ${height})`)
-                .call(d3.axisBottom(x))
-                .selectAll("text")
-                .attr("transform", "translate(-10,0)rotate(-45)")
-                .style("text-anchor", "end");
+            .attr("transform", `translate(0, ${height})`)
+            .call(d3.axisBottom(x))
+            .selectAll("text")
+            .attr("transform", "translate(-10,0)rotate(-45)")
+            .style("text-anchor", "end");
 // Add Y axis
-            const y = d3.scaleLinear()
-                .domain([0,  Math.max(...stations.map(item =>item.frequentation[ligne]))])
-                .range([ height,0]);
+        const y = d3.scaleLinear()
+            .domain([0, Math.max(...stations.map(item => item.frequentation[ligne]))])
+            .range([height, 0]);
         svgLigne.append("g")
-                .call(d3.axisLeft(y));
+            .call(d3.axisLeft(y));
 
 // Bars
         svgLigne.selectAll("mybar")
-                .data(stations)
-                .join("rect")
-                .attr("x", d =>  x(d.nom))
-                .attr("y", d =>  y(d.frequentation[ligne]))
-                .attr("width", x.bandwidth())
-                .attr("height", d => height -  y(d.frequentation[ligne]))
-                .attr("fill", d=>{
-                    if(d.nom===data.nom){
-                        return "grey"
-                    }else {
-                        return infoLigne[ligne].color
-                    }})
+            .data(stations)
+            .join("rect")
+            .attr("x", d => x(d.nom))
+            .attr("y", d => y(d.frequentation[ligne]))
+            .attr("width", x.bandwidth())
+            .attr("height", d => height - y(d.frequentation[ligne]))
+            .attr("fill", d => {
+                if (d.nom === data.nom) {
+                    return "grey"
+                } else {
+                    return infoLigne[ligne].color
+                }
+            })
 
 
     }
+
     afficheBar()
 
     affichePie()

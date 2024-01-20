@@ -53,6 +53,7 @@ div.tooltip {
     height: 80%;
     position: absolute;
     z-index: 600; /* Valeur à ajuster selon vos besoins */
+    overflow: auto;
 }
 
 #sidebar *{
@@ -109,6 +110,7 @@ div.tooltip {
     border-radius: 5px;
     background-color: white;
     cursor: pointer;
+    margin-top: 0;
 
 }
 
