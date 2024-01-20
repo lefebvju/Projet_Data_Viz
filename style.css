@@ -91,10 +91,51 @@ div.tooltip {
 
 #freqLigne{
     position: absolute;
-    top: 0px;
+    top: 0 ;
     right: 0;
     z-index: 598;
     pointer-events: none;
 }
 
+#boutonAffluence{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#boutonAffluence *{
+    margin: 5px;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+
+}
+
+#boutonAffluence *:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Ombre légère avec couleur noire */
+}
+
+#boutonLigne{
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+#boutonLigne *:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Ombre légère avec couleur noire */
+}
+.choixLigne{
+    margin: 5px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+}
 

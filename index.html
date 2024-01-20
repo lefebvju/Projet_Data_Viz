@@ -105,14 +105,7 @@
             var arrets = svg.append("g");
             arrets.selectAll("circle")
                 .data(data.features.filter(function(d, i, self) {
-                   for (let ligne in d.properties.frequentation) {
 
-                       if (infoLigne[ligne]) {
-                           infoLigne[ligne].frequentation += d.properties.frequentation[ligne]
-                       } else {
-                           infoLigne[ligne] = {frequentation: d.properties.frequentation[ligne]}
-                       }
-                   }
                     // Utilisez une fonction de filtrage pour éviter les doublons
                     return i === self.findIndex((t) => {
                         if(t.properties.nom === d.properties.nom){
@@ -130,8 +123,20 @@
                     });
                 }))
                 .enter()
+                //faire calcule sur les données restante
+
                 .append("circle")
                 .attr("cx", function(d) {
+                    for (let ligne in d.properties.frequentation) {
+
+                        if (infoLigne[ligne]) {
+                            infoLigne[ligne].frequentation += d.properties.frequentation[ligne]
+                            infoLigne[ligne].stations.push(d.properties)
+                        } else {
+                            infoLigne[ligne] = {frequentation: d.properties.frequentation[ligne]}
+                            infoLigne[ligne].stations=[d.properties]
+                        }
+                    }
                     return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).x
                 })
                 .attr("cy", function(d) {

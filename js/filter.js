@@ -120,8 +120,10 @@ function addfreq(){
 // Trier la liste en fonction de la clé
     data.sort((a, b) => (a.cle > b.cle) ? 1 : ((b.cle > a.cle) ? -1 : 0));
 
+
+    var heightWin = window.innerHeight;
     var margin = {top: 0, right: 47, bottom: 0, left: 0},
-        width = 300 - margin.left - margin.right,
+        width = heightWin*0.2 - margin.left - margin.right,
         height = 660 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
