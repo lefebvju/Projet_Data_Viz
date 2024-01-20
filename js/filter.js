@@ -67,6 +67,41 @@ function addFilter(onchange=[]){
 
                 })
 
+    filter.append("div")
+    .attr("class", "filter-all")
+    .style("background-color", "rgb(180, 180, 180)")
+    .html("<i class='fas fa-eye-slash fa-2x' ></i>")
+    .on('click', function(e, d) {
+        if(d3.select(this).classed("clicked")) {
+            d3.select(this).classed("clicked", false).html("<i class='fas fa-eye-slash fa-2x' ></i>");
+            d3.selectAll(".filter")
+                .each(function() {
+                    //simuler un click sur chaque element
+                    var elem=d3.select(this);
+                    if(elem.classed("clicked")) {
+                        elem.dispatch('click');
+                    }
+
+                });
+
+        }else{
+        d3.select(this).classed("clicked", true).html("<i class='fas fa-eye fa-2x' ></i>");
+
+        d3.selectAll(".filter")
+            .each(function() {
+                //simuler un click sur chaque element
+                var elem=d3.select(this);
+                if(!elem.classed("clicked")) {
+                    elem.dispatch('click');
+                }
+
+            });
+
+        }
+
+    })
+
+
 
 }
 
@@ -136,7 +171,6 @@ function addfreq(){
         .duration(1000)
         .text(function(d) { return d.frequentation; })
         .attr("x", (d) => {
-            // Adjust the threshold value as needed
             if (x(d.frequentation) > d.frequentation.toString().length*10) {
                 return width - x(d.frequentation) + 5; // Inside the bar
             } else {

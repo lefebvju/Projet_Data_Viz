@@ -61,7 +61,7 @@ div.tooltip {
 .arrets{
     cursor: pointer;
 }
-.filter {
+.filter, .filter-all{
     width: 40px; /* Ajustez la taille du cercle selon vos besoins */
     height: 40px;
     border-radius: 50%; /* Transforme le div en un cercle */
