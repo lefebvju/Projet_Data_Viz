@@ -55,13 +55,14 @@
         var metro_lines = lines.append("g");
 
         function update() {
+            svg.selectAll("path").attr("d", path);
             var cumulativeAngle = 0;
             var arc = d3.arc()
                 .innerRadius(0)
                 .outerRadius(10);
 
             
-            svg.selectAll("g")  // Select all groups containing pie chart slices
+            svg.selectAll(".pie")  // On sélectionne tous les pies charts
                 .attr("transform", function (d) {
                     return "translate(" + path.centroid(d) + ")";
                 })
@@ -125,6 +126,7 @@
                 }))
                 .enter()
                 .append("g")
+                .attr("class", "pie")
                 .attr("transform", function (d) {
                     return "translate(" + path.centroid(d) + ")";
                 })
