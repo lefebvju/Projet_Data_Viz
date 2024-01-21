@@ -28,7 +28,11 @@ function addFilter(onchange=[]){
                             return d.color
                         })
                             .classed("clicked", false);
-                        d3.selectAll(".freq" + d.cle).style("display", "block")
+                        d3.selectAll(".freq" + d.cle)
+                            .transition()
+                            .delay(1000)                       
+                            .style("display", "block")
+                            
                         d3.selectAll("#freq" + d.cle)
                             .transition()
                             .duration(1000)
@@ -131,6 +135,7 @@ function addfreq(){
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
+        .style("pointer-events", "all")
         .append("g")
         // Add X axis
         x
@@ -180,7 +185,10 @@ function addfreq(){
         })
         .transition()
         .duration(1000)
-        .text(function(d) { return d.frequentation; })
+        .text(function(d) { 
+            //Le replace permet d'ajouter des espaces tous les 3 chiffres
+            return d.frequentation.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "); 
+        })
         .attr("x", (d) => {
             if (x(d.frequentation) > d.frequentation.toString().length*10) {
                 return width - x(d.frequentation) + 5; // Inside the bar
