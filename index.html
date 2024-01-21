@@ -214,14 +214,21 @@
                     })
 
                 // On affiche la légende
+                translate = 20 + 8*(mapZoom-12)
                 d3.select(".legendSize")
+                    .attr("transform", "translate("+translate+","+translate+")")
                     .call(sizeLegend, {
                         sizeScale: radiusScale,
-                        spacing: 30 + 15*(mapZoom-12),
+                        spacing: 30 + 18*(mapZoom-12),
                         textOffset: 20,
                         numTicks: 5,
                         circleFill: "rgba(0,0,0,0.5)",
                     });
+                
+                // On remonte la div de la légende
+                bottom = 1 + 11*(mapZoom-12)
+                d3.select("#legend-section")
+                        .style("bottom", bottom+"%")
             }
             afficherArrets()
             refresh.push(afficherArrets)
