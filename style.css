@@ -162,3 +162,19 @@ div.tooltip {
     font-size: 14px;
 }
 
+/* Titre général */
+#title {
+    position:absolute;
+    top:0;
+    z-index: 600;
+    font-size: 13px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    background-color: rgba(247, 247, 247, 0.6);
+}
+
+#title h1 {
+    margin: 10px;
+}
+
+
+
