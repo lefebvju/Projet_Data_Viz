@@ -136,7 +136,7 @@
                     return nomLigneArray.map(function (_, i) {
                         var value = d.properties.frequentation[nomLigneArray[i]] / d.properties.sumFrequentation;
                         //TODO: ajouter la couleur correspondante
-                        return {nom: d.properties.nom, nom_ligne: nomLigneArray[i], value: value, last: i+1 == total, color: null};
+                        return {nom: d.properties.nom, nom_ligne: nomLigneArray[i], value: value, last: i+1 == total, affluence: d.properties.frequentation[nomLigneArray[i]]};
                     });
                 })
                 .enter()
@@ -172,7 +172,7 @@
                         'px; top:' + (mousePosition[1] - 35) + 'px')
                     // on recupere le nom de l'etat
 
-                    .html("<b>"+d.nom+"</b><br/>"+"Ligne : "+d.nom_ligne);
+                    .html("<b>"+d.nom+"</b><br/>"+"Ligne : "+d.nom_ligne+"</b><br/>"+"Affluence : "+d.affluence);
                 })
                 .on('click', function(e, d) {
                     afficherSidebar()
