@@ -19,7 +19,6 @@
 <div id="legend-section">
     <div id="title-legend"> Légende :</div>
 </div>
-<div id="freqLigne"></div>
     <div id="sidebar-container" class="hidden">
         <button id="close" onclick="fermerSidebar()">
             <i class="fas fa-times"></i>
@@ -27,7 +26,6 @@
         <div id="sidebar"></div>
     </div>
     <div id="tooltip" class="hidden tooltip"></div>
-
     <div id="map"></div>
     <script>
         /********************************
@@ -36,7 +34,7 @@
          * ------------------------------
          *******************************/
         var refresh = []
-        var infoLigne={}
+        var colorLigne={}
         var mapZoom = 12;
 
         // Conversion GEOJSON -> leaflet coordonnées
@@ -65,6 +63,13 @@
 
         L.svg().addTo(map);
         map.on("moveend", update);
+        map.on('zoomend', function (e) {
+            mapZoom = e.target._zoom;
+            // A chaque zoom on appel les fonctions de refresh
+            // et donc la fonction afficherArrets() qui redimensionne 
+            // les points
+            refresh.forEach(f => f())
+        });
 
         var tooltip = d3.select('#tooltip');
         var sidebar = d3.select('#sidebar');
@@ -73,7 +78,7 @@
 
         function update() {
             svg.selectAll("path").attr("d", path);
-            svg.selectAll("circle")
+            svg.selectAll(".arrets")
                 .attr("cx", function(d) {
                     return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).x
                 })
@@ -111,7 +116,6 @@
             var arrets = svg.append("g");
             arrets.selectAll("circle")
                 .data(data.features.filter(function(d, i, self) {
-
                     // Utilisez une fonction de filtrage pour éviter les doublons
                     return i === self.findIndex((t) => {
                         if(t.properties.nom === d.properties.nom){
@@ -119,7 +123,6 @@
                             // On fusionne les données de fréquentation
                             t.properties.frequentation = Object.assign({}, t.properties.frequentation, d.properties.frequentation);
                             t.properties.sumFrequentation = sumFrequentation(t.properties.frequentation)
-
                             t.properties.ascenseur= t.properties.ascenseur || d.properties.ascenseur
                             t.properties.escalator= t.properties.escalator || d.properties.escalator
                             return true
@@ -129,20 +132,8 @@
                     });
                 }))
                 .enter()
-                //faire calcule sur les données restante
-
                 .append("circle")
                 .attr("cx", function(d) {
-                    for (let ligne in d.properties.frequentation) {
-
-                        if (infoLigne[ligne]) {
-                            infoLigne[ligne].frequentation += d.properties.frequentation[ligne]
-                            infoLigne[ligne].stations.push(d.properties)
-                        } else {
-                            infoLigne[ligne] = {frequentation: d.properties.frequentation[ligne]}
-                            infoLigne[ligne].stations=[d.properties]
-                        }
-                    }
                     return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).x
                 })
                 .attr("cy", function(d) {
@@ -200,18 +191,21 @@
                     return sumFrequentation(d.properties.frequentation)
                 })
 
+                let minFrequentation = d3.min(data.features, function (d) {
+                    return minFreq(d.properties.frequentation)
+                })
+
                 // On définit le scale du radius pour avoir une taille raisonable
+                rangemax = 15 + 10*(mapZoom-12)
                 var radiusScale = d3.scaleSqrt()
-                    .domain([0, maxFrequentation])
-                    .range([2, 15]);
+                    .domain([minFrequentation, maxFrequentation])
+                    .range([2, rangemax]);
 
                 // On met à jour le radius en fonction de la fréquentation
                 arrets.selectAll("circle")
                     .transition()
                     .duration(1000)
                     .attr("r", function (d) {
-                        // On calcule le rayon en fonction de la fréquentation
-                        // Valeur absolue pour corriger quelques approximations négatives
                         return Math.abs(radiusScale(sumFrequentation(d.properties.frequentation)))
                     })
 
@@ -264,7 +258,7 @@
                     .attr("stroke", d =>{
                         col = d.properties.couleur
                         col = col.split(" ")
-                        infoLigne[d.properties.ligne].color = "rgb("+col[0]+","+col[1]+","+col[2]+")"
+                        colorLigne[d.properties.ligne] = "rgb("+col[0]+","+col[1]+","+col[2]+")"
                         return "rgb("+col[0]+","+col[1]+","+col[2]+")"
                         })
                     .on('mouseover', mouseoverLigne())
@@ -272,7 +266,7 @@
                         d3.select(this).attr("stroke-width",2)
                         tooltip.classed('hidden', true);
                     })
-                    //addFilter(data, refresh)
+                    addFilter(data, refresh)
 
             });
 
@@ -287,6 +281,7 @@
                     .attr("class", "tram_lines")
                     .selectAll("path")
                     .data(data.features.filter(function(d, i, self) {
+                        colorLigne[d.properties.ligne] = d.properties.couleur
                         // Utilisez une fonction de filtrage pour éviter les doublons
                         return i === self.findIndex((t) =>(t.properties.ligne === d.properties.ligne));
                     }))
@@ -300,7 +295,7 @@
                     .attr("stroke", d =>{
                         col = d.properties.couleur
                         col = col.split(" ")
-                        infoLigne[d.properties.ligne].color = "rgb("+col[0]+","+col[1]+","+col[2]+")"
+                        colorLigne[d.properties.ligne] = "rgb("+col[0]+","+col[1]+","+col[2]+")"
                         return "rgb("+col[0]+","+col[1]+","+col[2]+")"
                         })
                     .on('mouseover', mouseoverLigne())
@@ -308,8 +303,7 @@
                         d3.select(this).attr("stroke-width",2)
                         tooltip.classed('hidden', true);
                     });
-                addFilter(refresh)
-                addfreq()
+                addFilter(data, refresh)
 
             });
         });
