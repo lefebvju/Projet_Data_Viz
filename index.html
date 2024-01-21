@@ -48,18 +48,16 @@
         map.on("moveend", update);
 
         var tooltip = d3.select('#tooltip');
+        var sidebar = d3.select('#sidebar');
+        var sidebarContainer = d3.select('#sidebar-container');
         var svg=d3.select("svg");
-        
-        var lines = svg.append("g");
-        var tram_lines = lines.append("g");
-        var metro_lines = lines.append("g");
 
         function update() {
             svg.selectAll("path").attr("d", path);
             var cumulativeAngle = 0;
             var arc = d3.arc()
                 .innerRadius(0)
-                .outerRadius(10);
+                .outerRadius(5 * Math.pow(2, map.getZoom() - 12));
 
             
             svg.selectAll(".pie")  // On sélectionne tous les pies charts
@@ -138,7 +136,7 @@
                     return nomLigneArray.map(function (_, i) {
                         var value = d.properties.frequentation[nomLigneArray[i]] / d.properties.sumFrequentation;
                         //TODO: ajouter la couleur correspondante
-                        return { label: "Slice" + (i + 1), value: value, last: i+1 == total};
+                        return {nom: d.properties.nom, nom_ligne: nomLigneArray[i], value: value, last: i+1 == total, color: null};
                     });
                 })
                 .enter()
@@ -162,25 +160,28 @@
                 .attr("stroke", "black")
                 .attr("stroke-width", 1)
                 .style("pointer-events", "all")
+                .on('mouseover', function(e, d) {
+                    // on recupere la position de la souris,
+                    // e est l'object event d
+                    var mousePosition = [e.x, e.y];
+                    // on affiche le toolip
+                    tooltip.classed('hidden', false)
+                    // on positionne le tooltip en fonction
+                    // de la position de la souris
+                    .attr('style', 'left:' + (mousePosition[0] + 15) +
+                        'px; top:' + (mousePosition[1] - 35) + 'px')
+                    // on recupere le nom de l'etat
 
-                // arrets.selectAll("path")
-                //     .on("mouseover", function (event, d) {
-                //         // Add your logic for mouseover event here
-                //         d3.select(this)
-                //             .attr("fill", "lightgray"); // Change color on mouseover
-                //     })
-                //     .on("mouseout", function (event, d) {
-                //         // Add your logic for mouseout event here
-                //         d3.select(this)
-                //             .attr("fill", function (d, i) {
-                //                 var colors = ["purple", "blue", "green", "yellow", "red", "orange", "cyan", "magenta", "brown"];
-                //                 return colors[i % colors.length];
-                //             }); // Change color back on mouseout
-                //     })
-                //     .on("click", function (event, d) {
-                //         // Add your logic for click event here
-                //         console.log("Clicked on slice with label:", d.label);
-                //     });
+                    .html("<b>"+d.nom+"</b><br/>"+"Ligne : "+d.nom_ligne);
+                })
+                .on('click', function(e, d) {
+                    afficherSidebar()
+                    remplirSidebar(d.properties)
+                })
+                .on('mouseout', function() {
+                    // on cache le toolip
+                    tooltip.classed('hidden', true);
+                });
 
 
             d3.json("./data/sytral_tcl_sytral.tcllignemetrofuni_2_0_0.json").then(function (data) {
@@ -210,7 +211,6 @@
                         tooltip.classed('hidden', true);
                     })
                     addFilter(data)
-
             });
 
             /*************************************
