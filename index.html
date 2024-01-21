@@ -150,13 +150,6 @@
                     cumulativeAngle = d.last === true ? 0 : endAngle;
                     return arcData;
                 })
-                .attr("fill", function (d, i) {
-                    // Use a color scale or an array of colors to assign different colors to each slice
-                    var colors = ["purple", "blue", "green", "yellow", "red", "orange", "cyan", "magenta", "brown"];
-                    
-                    // Use the index to select a color from the array
-                    return colors[i % colors.length];
-                })
                 .attr("stroke", "black")
                 .attr("stroke-width", 1)
                 .style("pointer-events", "all")
@@ -246,7 +239,38 @@
                     });
                 addFilter(data)
 
+                
             });
+
+            //pour la couleur des slices
+            d3.json("./data/sytral_tcl_sytral.tcllignetram_2_0_0.json").then(function (tramData) {
+                d3.json("./data/sytral_tcl_sytral.tcllignemetrofuni_2_0_0.json").then(function (metroData) {
+                    var pieGroups = d3.selectAll(".pie");
+                    pieGroups.selectAll("path")
+                        .attr("fill", function (d_slice, i) {
+                            var color;
+
+                            tramData.features.filter(function(d_tram, i, self) {
+                                if(d_slice.nom_ligne == d_tram.properties.ligne) {
+                                    color = d_tram.properties.couleur;
+                                }
+                            })
+
+                            metroData.features.filter(function(d_metro, i, self) {
+                                if(d_slice.nom_ligne == d_metro.properties.ligne) {
+                                    color = d_metro.properties.couleur;
+                                }
+                            })
+                            color = "rgb(" + color.split(" ").join(",") + ")"
+                            return color;
+                        })
+                });
+            });
+
+            
+
+            
+
         });
     </script>
 
