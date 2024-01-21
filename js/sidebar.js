@@ -101,8 +101,14 @@ function remplirSidebar(data) {
                 .attr("font-weight", "bold")
             return
         }
-        var
-            g = svgStation.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+        svgStation.append("text").text("Affluence moyenne (voyageurs par jour)")
+            .attr("x", width / 2)
+            .attr("y", 20)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "16px")
+            .attr("fill", "black")
+            .attr("font-weight", "bold")
+        var g = svgStation.append("g").attr("transform", "translate(" + width / 2 + "," + (15+height / 2) + ")");
 
 
         // Generate the pie
@@ -153,7 +159,7 @@ function remplirSidebar(data) {
             .attr("dy", "0.35em")
 
         arcs.append("text")
-            .text(sumFrequentation(data.frequentation))
+            .text(sumFrequentation(data.frequentation).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "))
             .style("text-anchor", "middle")
             .attr("dy", "0.35em")
 
@@ -182,7 +188,7 @@ function remplirSidebar(data) {
             .selectAll('allLabels')
             .data(data_ready)
             .join('text')
-            .text(d => d.data[1])
+            .text(d => d.data[1].toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "))
 
             .attr('transform', function (d) {
                 const pos = outerArc.centroid(d);
@@ -244,8 +250,16 @@ function remplirSidebar(data) {
         width = width - margin.left - margin.right,
             height = height - margin.top - margin.bottom;
         svgLigne.html("");
-        var
-            g = svgLigne.append("g");
+
+        svgLigne.append("text").text("Affluence moyenne sur la ligne " + ligne + " (voy/jour)")
+            .attr("x", width / 2)
+            .attr("y", -15)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "14px")
+            .attr("fill", "black")
+            .attr("font-weight", "bold")
+
+        var g = svgLigne.append("g");
         var stations = infoLigne[ligne].stations;
 // X axis
         const x = d3.scaleBand()

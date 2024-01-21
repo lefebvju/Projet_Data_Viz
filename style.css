@@ -43,9 +43,9 @@ div.tooltip {
 }
 #sidebar-container {
     color: #222;
-    background-color: rgba(232, 230, 230, 0.66);
+    background-color: rgba(247, 247, 247, 0.8);
     border-radius: 2px;
-    opacity: 0.9;
+    opacity: 1;
     top: 10%;
     left: 2%;
     width: 30%;

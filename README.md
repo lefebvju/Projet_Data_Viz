@@ -85,3 +85,8 @@
 - Ajout d'un bouton pour sélectionner et désélectionner toutes les lignes
 - Ajout d'un bouton et d'une page pour afficher les crédits
 - Ajout d'une visualisation de l'affluence des stations d'une ligne dans la side bar
+
+**Loris :**
+- Création de la légende
+- Ajustement de la taille des arrêts en fonction du zoom
+- Finitions des éléments de notre visualisation
