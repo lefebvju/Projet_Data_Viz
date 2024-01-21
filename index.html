@@ -49,20 +49,32 @@
 
         var tooltip = d3.select('#tooltip');
         var svg=d3.select("svg");
-        // BIEN LE METTRE APRES CETTE LIGNE
+        
         var lines = svg.append("g");
         var tram_lines = lines.append("g");
         var metro_lines = lines.append("g");
 
         function update() {
-            lines.selectAll("path").attr("d", path);
-            lines.selectAll("circle")
-                .attr("cx", function(d) {
-                    return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).x
+            var cumulativeAngle = 0;
+            var arc = d3.arc()
+                .innerRadius(0)
+                .outerRadius(10);
+
+            
+            svg.selectAll("g")  // Select all groups containing pie chart slices
+                .attr("transform", function (d) {
+                    return "translate(" + path.centroid(d) + ")";
                 })
-                .attr("cy", function(d) {
-                    return map.latLngToLayerPoint([d.geometry.coordinates[0][1], d.geometry.coordinates[0][0]]).y
-                })
+                .selectAll("path")
+                .attr("d", function (d) {
+                    var startAngle = cumulativeAngle;
+                    var endAngle = 2 * Math.PI * d.value + cumulativeAngle;
+                    
+                    var arcData = arc({ startAngle: startAngle, endAngle: endAngle });
+
+                    cumulativeAngle = d.last === true ? 0 : endAngle;
+                    return arcData;
+                });
         }
 
 
@@ -148,6 +160,25 @@
                 .attr("stroke", "black")
                 .attr("stroke-width", 1)
                 .style("pointer-events", "all")
+
+                // arrets.selectAll("path")
+                //     .on("mouseover", function (event, d) {
+                //         // Add your logic for mouseover event here
+                //         d3.select(this)
+                //             .attr("fill", "lightgray"); // Change color on mouseover
+                //     })
+                //     .on("mouseout", function (event, d) {
+                //         // Add your logic for mouseout event here
+                //         d3.select(this)
+                //             .attr("fill", function (d, i) {
+                //                 var colors = ["purple", "blue", "green", "yellow", "red", "orange", "cyan", "magenta", "brown"];
+                //                 return colors[i % colors.length];
+                //             }); // Change color back on mouseout
+                //     })
+                //     .on("click", function (event, d) {
+                //         // Add your logic for click event here
+                //         console.log("Clicked on slice with label:", d.label);
+                //     });
 
 
             d3.json("./data/sytral_tcl_sytral.tcllignemetrofuni_2_0_0.json").then(function (data) {
