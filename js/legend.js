@@ -1,3 +1,15 @@
+function minFreq(freq) {
+    let min = 1000000
+
+    for (let cle in freq) {
+        if (freq[cle] < min) {
+            min = freq[cle];
+        }
+    }
+
+    return min;
+}
+
 const sizeLegend = (selection, props) => {
     const {
         sizeScale,
@@ -39,3 +51,4 @@ const sizeLegend = (selection, props) => {
             .attr('dy', '0.32em')
             .attr('x', d => sizeScale(d) + textOffset);
 }
+

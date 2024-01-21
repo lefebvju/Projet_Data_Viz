@@ -65,6 +65,13 @@
 
         L.svg().addTo(map);
         map.on("moveend", update);
+        map.on('zoomend', function (e) {
+            mapZoom = e.target._zoom;
+            // A chaque zoom on appel les fonctions de refresh
+            // et donc la fonction afficherArrets() qui redimensionne 
+            // les points
+            refresh.forEach(f => f())
+        });
 
         var tooltip = d3.select('#tooltip');
         var sidebar = d3.select('#sidebar');
@@ -200,10 +207,17 @@
                     return sumFrequentation(d.properties.frequentation)
                 })
 
+                let minFrequentation = d3.min(data.features, function (d) {
+                    return minFreq(d.properties.frequentation)
+                })
+
+                console.log(minFrequentation)
+
                 // On définit le scale du radius pour avoir une taille raisonable
+                rangemax = 15 + 10*(mapZoom-12)
                 var radiusScale = d3.scaleSqrt()
-                    .domain([0, maxFrequentation])
-                    .range([2, 15]);
+                    .domain([minFrequentation, maxFrequentation])
+                    .range([2, rangemax]);
 
                 // On met à jour le radius en fonction de la fréquentation
                 arrets.selectAll("circle")
