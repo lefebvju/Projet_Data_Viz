@@ -44,19 +44,26 @@ function remplirSidebar(data) {
         ascenseurIcon.append("i").attr("class", "fas fa-ban fa-3x").style("color", "red").style("position", "absolute").style("transform", "translate(-40px, -7px)").style("opacity", "0.7")
     }
 
-
+    
     var affluence = sidebar.append("div").attr("id", "affluence")
     var btnAffluence = affluence.append("div").attr("id", "boutonAffluence")
+    
     btnAffluence.append("div").html("Station").on("click", function () {
         svgStation.style("display", "block");
+        titreCamember.style("display", "block");
+        titreBar.style("display", "none");
         d3.select("#affluenceLigne").style("display", "none");
         d3.select(this).style("color", "black");
         d3.select("#boutonAffluenceLigne").style("color", "grey");
         refresh.push(affichePie);
         affichePie();
     });
+
+
     btnAffluence.append("div").style("color", "grey").html("Ligne").attr("id", "boutonAffluenceLigne").on("click", function () {
         svgStation.style("display", "none");
+        titreCamember.style("display", "none");
+        titreBar.style("display", "block");
         d3.select("#affluenceLigne").style("display", "block");
         d3.select(this).style("color", "black");
         d3.select("#boutonAffluence div").style("color", "grey");
@@ -67,6 +74,23 @@ function remplirSidebar(data) {
     });
     affluence.append("div").attr("id", "affluenceStation")
     affluence.append("div").attr("id", "affluenceLigne")
+
+    /* TITRE Graphique */
+    titreCamember = d3.select("#affluenceStation").append("div").attr("id", "titreCamembert")
+        .append("text").text("Affluence moyenne (voy/jour)")
+        .style("text-align", "center")
+        .style("font-weight", "bold")
+        .style("font-size", "15px")
+        .style("margin-bottom", "10px")
+        .style("display", "block")
+    
+    titreBar = d3.select("#affluenceStation").append("div").attr("id", "titreBar")
+        .append("text").text("Affluence moyenne sur la ligne (voy/jour)")
+        .style("text-align", "center")
+        .style("font-weight", "bold")
+        .style("font-size", "14px")
+        .style("margin-bottom", "10px")
+        .style("display", "none")
 
 
     var margin = 60
@@ -101,14 +125,7 @@ function remplirSidebar(data) {
                 .attr("font-weight", "bold")
             return
         }
-        svgStation.append("text").text("Affluence moyenne (voyageurs par jour)")
-            .attr("x", width / 2)
-            .attr("y", 20)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "16px")
-            .attr("fill", "black")
-            .attr("font-weight", "bold")
-        var g = svgStation.append("g").attr("transform", "translate(" + width / 2 + "," + (15+height / 2) + ")");
+        var g = svgStation.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
 
         // Generate the pie
@@ -243,21 +260,12 @@ function remplirSidebar(data) {
 
 
     function afficheBar(ligne = data.nom_ligne[0]) {
-
         var margin = {top: 30, right: 30, bottom: 100, left: 60};
         var width = sidebarContainer.node().getBoundingClientRect().width
         var height = sidebarContainer.node().getBoundingClientRect().height / 2
         width = width - margin.left - margin.right,
             height = height - margin.top - margin.bottom;
         svgLigne.html("");
-
-        svgLigne.append("text").text("Affluence moyenne sur la ligne " + ligne + " (voy/jour)")
-            .attr("x", width / 2)
-            .attr("y", -15)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "14px")
-            .attr("fill", "black")
-            .attr("font-weight", "bold")
 
         var g = svgLigne.append("g");
         var stations = infoLigne[ligne].stations;
