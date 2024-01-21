@@ -211,8 +211,6 @@
                     return minFreq(d.properties.frequentation)
                 })
 
-                console.log(minFrequentation)
-
                 // On définit le scale du radius pour avoir une taille raisonable
                 rangemax = 15 + 10*(mapZoom-12)
                 var radiusScale = d3.scaleSqrt()
@@ -240,13 +238,13 @@
                     .call(sizeLegend, {
                         sizeScale: radiusScale,
                         spacing: 30 + 18*(mapZoom-12),
-                        textOffset: 20,
+                        textOffset: 12,
                         numTicks: 5,
                         circleFill: "rgba(0,0,0,0.5)",
                     });
                 
                 // On remonte la div de la légende
-                bottom = 1 + 11*(mapZoom-12)
+                bottom = -3 + 13*(mapZoom-12)
                 d3.select("#legend-section")
                         .style("bottom", bottom+"%")
             }

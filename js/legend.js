@@ -36,7 +36,7 @@ const sizeLegend = (selection, props) => {
 
     groupsEnter
         .merge(groups)
-            .attr('transform', (d, i) =>
+            .attr('transform', (d, i) => 
                 `translate(0, ${i * spacing})`
             );
     
@@ -49,8 +49,13 @@ const sizeLegend = (selection, props) => {
     
     groupsEnter.append('text')
         .merge(groups.select('text'))
+            //Le replace permet d'ajouter des espaces tous les 3 chiffres
             .text(d => d.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "))
             .attr('dy', '0.32em')
-            .attr('x', d => sizeScale(d) + textOffset);
+            .attr('x', d => sizeScale(d) + textOffset)
+            .append('tspan')
+                .attr('fill-opacity', 0.9)
+                .attr('font-style', 'italic')
+                .text('  voy/jour');
 }
 
