@@ -1,9 +1,11 @@
-function minFreq(freq) {
-    let min = 1000000
+minFreq = function (freq) {
+    let min = 1000000;
 
     for (let cle in freq) {
-        if (freq[cle] < min) {
-            min = freq[cle];
+        if (!list_filter.includes(cle)) {
+            if (freq[cle] < min) {
+                min = freq[cle];
+            }
         }
     }
 
