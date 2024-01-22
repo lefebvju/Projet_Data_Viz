@@ -191,9 +191,9 @@ function addfreq(){
         })
         .attr("x", (d) => {
             if (x(d.frequentation) > d.frequentation.toString().length*10) {
-                return width - x(d.frequentation) + 5; // Inside the bar
+                return width - x(d.frequentation) +5; // Inside the bar
             } else {
-                return width - x(d.frequentation) - Math.max((d.frequentation.toString().length-3),0)*10-20; // Outside the bar
+                return width - x(d.frequentation) - Math.max((d.frequentation.toString().length-3),0)*10-25; // Outside the bar
             }
         })
         .attr("dy", "0.35em") // Vertical alignment
