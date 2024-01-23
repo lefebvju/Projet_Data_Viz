@@ -90,3 +90,7 @@
 - Création de la légende
 - Ajustement de la taille des arrêts en fonction du zoom
 - Finitions des éléments de notre visualisation
+ 
+**Nino :**
+- Finalisation des pies charts
+![Pie chart](img/piechart2.png)
