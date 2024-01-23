@@ -177,5 +177,25 @@ div.tooltip {
     margin: 10px;
 }
 
+/* Choix Visualisation */
+#switchVisu {
+    position:absolute;
+    bottom:3%;
+    right:6%;
+
+    display: flex;
+    align-items: center;
+
+    z-index: 600;
+
+    font-size: 13px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+
+#switchVisu button {
+    margin-right: 5px;
+}
+
 
 
