@@ -53,7 +53,11 @@
         var svg=d3.select("svg");
 
         function update() {
-            svg.selectAll("path").attr("d", path);
+            svg.selectAll("path").attr("d", path);  
+            updatePie();          
+        }
+
+        function updatePie(){
             var cumulativeAngle = 0;
             var arc = d3.arc()
                 .innerRadius(0)
@@ -76,55 +80,14 @@
                 });
         }
 
+        function drawPie() {
+                var arc = d3.arc()
+                    .innerRadius(0)
+                    .outerRadius(10);
 
-        /***************************************
-         * -------------------------------------
-         * -- Affichage des arrets de métros ---
-         * -------------------------------------
-         **************************************/
-        var metro = d3.json("./data/sytral_tcl_sytral.tclarret_sans_bus.json").then(function (data) {
-            centerlat = (d3.min(data.features, function (d) {
-                return d.geometry.coordinates[0][1];
-            }) + d3.max(data.features, function (d) {
-                return d.geometry.coordinates[0][1];
-            })) / 2;
-            centerlon = (d3.min(data.features, function (d) {
-                return d.geometry.coordinates[0][0];
-            }) + d3.max(data.features, function (d) {
-                return d.geometry.coordinates[0][0];
-            })) / 2;
+                var cumulativeAngle = 0;
 
-            map.setView([centerlat, centerlon]);
-
-            var tram_lines = svg.append("g");
-            var metro_lines = svg.append("g");
-
-            var arc = d3.arc()
-                .innerRadius(0)
-                .outerRadius(10); // Adjust the outer radius as needed
-
-            var cumulativeAngle = 0;
-
-            var arrets = svg.append("g")
-                .attr("class", "arrets")
-                .selectAll("g")
-                .data(data.features.filter(function(d, i, self) {
-                    // Utilisez une fonction de filtrage pour éviter les doublons
-                    return i === self.findIndex((t) => {
-                        if(t.properties.nom === d.properties.nom){
-                            t.properties.nom_ligne=[...new Set(d.properties.nom_ligne.concat(t.properties.nom_ligne))]
-                            // On fusionne les données de fréquentation
-                            t.properties.frequentation = Object.assign({}, t.properties.frequentation, d.properties.frequentation);
-                            t.properties.sumFrequentation = sumFrequentation(t.properties.frequentation)
-                            return true
-                        }else {
-                            return false
-                        }
-                    });
-                }))
-                .enter()
-                .append("g")
-                .attr("class", "pie")
+                d3.selectAll(".pie")
                 .attr("transform", function (d) {
                     return "translate(" + path.centroid(d) + ")";
                 })
@@ -151,7 +114,11 @@
                     return arcData;
                 })
                 .attr("stroke", "black")
-                .attr("stroke-width", 1)
+                .attr("stroke-width", 1);
+            }
+
+            function mouseFct() {
+                d3.selectAll(".pie")
                 .style("pointer-events", "all")
                 .on('mouseover', function(e, d) {
                     // on recupere la position de la souris,
@@ -175,6 +142,54 @@
                     // on cache le toolip
                     tooltip.classed('hidden', true);
                 });
+            }
+
+
+        /***************************************
+         * -------------------------------------
+         * -- Affichage des arrets de métros ---
+         * -------------------------------------
+         **************************************/
+        var metro = d3.json("./data/sytral_tcl_sytral.tclarret_sans_bus.json").then(function (data) {
+            centerlat = (d3.min(data.features, function (d) {
+                return d.geometry.coordinates[0][1];
+            }) + d3.max(data.features, function (d) {
+                return d.geometry.coordinates[0][1];
+            })) / 2;
+            centerlon = (d3.min(data.features, function (d) {
+                return d.geometry.coordinates[0][0];
+            }) + d3.max(data.features, function (d) {
+                return d.geometry.coordinates[0][0];
+            })) / 2;
+
+            map.setView([centerlat, centerlon]);
+
+            var tram_lines = svg.append("g");
+            var metro_lines = svg.append("g");
+
+            var arrets = svg.append("g")
+                .attr("class", "arrets")
+                .selectAll("g")
+                .data(data.features.filter(function(d, i, self) {
+                    // Utilisez une fonction de filtrage pour éviter les doublons
+                    return i === self.findIndex((t) => {
+                        if(t.properties.nom === d.properties.nom){
+                            t.properties.nom_ligne=[...new Set(d.properties.nom_ligne.concat(t.properties.nom_ligne))]
+                            // On fusionne les données de fréquentation
+                            t.properties.frequentation = Object.assign({}, t.properties.frequentation, d.properties.frequentation);
+                            t.properties.sumFrequentation = sumFrequentation(t.properties.frequentation)
+                            return true
+                        }else {
+                            return false
+                        }
+                    });
+                }))
+                .enter()
+                .append("g")                
+                .attr("class", "pie");  
+            drawPie()
+            mouseFct()
+
 
 
             d3.json("./data/sytral_tcl_sytral.tcllignemetrofuni_2_0_0.json").then(function (data) {
@@ -243,29 +258,33 @@
             });
 
             //pour la couleur des slices
-            d3.json("./data/sytral_tcl_sytral.tcllignetram_2_0_0.json").then(function (tramData) {
-                d3.json("./data/sytral_tcl_sytral.tcllignemetrofuni_2_0_0.json").then(function (metroData) {
-                    var pieGroups = d3.selectAll(".pie");
-                    pieGroups.selectAll("path")
-                        .attr("fill", function (d_slice, i) {
-                            var color;
+            function colorPie() {
+                d3.json("./data/sytral_tcl_sytral.tcllignetram_2_0_0.json").then(function (tramData) {
+                    d3.json("./data/sytral_tcl_sytral.tcllignemetrofuni_2_0_0.json").then(function (metroData) {
+                        var pieGroups = d3.selectAll(".pie");
+                        pieGroups.selectAll("path")
+                            .attr("fill", function (d_slice, i) {
+                                var color;
 
-                            tramData.features.filter(function(d_tram, i, self) {
-                                if(d_slice.nom_ligne == d_tram.properties.ligne) {
-                                    color = d_tram.properties.couleur;
-                                }
-                            })
+                                tramData.features.filter(function(d_tram, i, self) {
+                                    if(d_slice.nom_ligne == d_tram.properties.ligne) {
+                                        color = d_tram.properties.couleur;
+                                    }
+                                })
 
-                            metroData.features.filter(function(d_metro, i, self) {
-                                if(d_slice.nom_ligne == d_metro.properties.ligne) {
-                                    color = d_metro.properties.couleur;
-                                }
+                                metroData.features.filter(function(d_metro, i, self) {
+                                    if(d_slice.nom_ligne == d_metro.properties.ligne) {
+                                        color = d_metro.properties.couleur;
+                                    }
+                                })
+                                color = "rgb(" + color.split(" ").join(",") + ")"
+                                return color;
                             })
-                            color = "rgb(" + color.split(" ").join(",") + ")"
-                            return color;
-                        })
+                    });
                 });
-            });
+            }
+            colorPie();
+            
 
             
 
