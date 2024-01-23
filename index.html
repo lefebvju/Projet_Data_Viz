@@ -54,8 +54,6 @@
         // Déclaration de la projection D3 utilisée
         path = d3.geoPath().projection(transform);
 
-        // Update map si zoom
-
         // Create Leaflet map
         var map = L.map('map').setView([45.75, 4.85], 12);
 
@@ -139,8 +137,6 @@
                     });
                 }))
                 .enter()
-                //faire calcule sur les données restante
-
                 .append("circle")
                 .attr("cx", function(d) {
                     for (let ligne in d.properties.frequentation) {
@@ -191,8 +187,6 @@
 
             // Légende
             legende_Pos = d3.select("#legend-section")   
-
-
             legende_Pos.append("div")
                     .attr("class", "svg-container")
                     .append("svg")
