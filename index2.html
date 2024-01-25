@@ -17,120 +17,132 @@
 <div id="filter-section"></div>
 <div id="tooltip" class="hidden tooltip"></div>
 <div id="switchVisu">
-    <button id="switch" onclick="switchVisu()"><i class="fas fa-exchange-alt"></i></button>
-    <p>Visu 2</p>
+    <div class="btn-container">
+        <label class="switch btn-color-mode-switch">
+            <input type="checkbox" name="color_mode" id="visu_mode" onclick="switchVisu()" checked>
+            <label for="visu_mode" data-on="Visu 2" data-off="Visu 1" class="btn-color-mode-switch-inner"></label>
+        </label>
+
+    </div>
 </div>
 <div id="map"></div>
-    <script>
-        /********************************
-         * ------------------------------
-         * -- MISE EN PLACE DE LA MAP ---
-         * ------------------------------
-         *******************************/
-        // Conversion GEOJSON -> leaflet coordonnées
-        function projectPoint(x, y) {
-            var point = map.latLngToLayerPoint(new L.LatLng(y, x));
-            this.stream.point(point.x, point.y);
-        }
+<script>
+    var infoLigne={}
+    /********************************
+     * ------------------------------
+     * -- MISE EN PLACE DE LA MAP ---
+     * ------------------------------
+     *******************************/
+    // Conversion GEOJSON -> leaflet coordonnées
+    function projectPoint(x, y) {
+        var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+        this.stream.point(point.x, point.y);
+    }
 
-        // Transformation des coordonnées en coordonnées Leaflet
-        var transform = d3.geoTransform({point: projectPoint}),
+    // Transformation des coordonnées en coordonnées Leaflet
+    var transform = d3.geoTransform({point: projectPoint}),
 
         // Déclaration de la projection D3 utilisée
         path = d3.geoPath().projection(transform);
 
-        // Create Leaflet map
-        var map = L.map('map').setView([45.75, 4.85], 12);
+    // Create Leaflet map
+    var map = L.map('map').setView([45.75, 4.85], 12);
 
-        //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-            maxZoom: 15,
-            minZoom: 12
-        }).addTo(map);
+    //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+        maxZoom: 15,
+        minZoom: 12
+    }).addTo(map);
 
-        L.svg().addTo(map);
-        map.on("moveend", update);
+    L.svg().addTo(map);
+    map.on("moveend", update);
 
-        var tooltip = d3.select('#tooltip');
-        var sidebar = d3.select('#sidebar');
-        var sidebarContainer = d3.select('#sidebar-container');
-        var svg=d3.select("svg");
+    var tooltip = d3.select('#tooltip');
+    var sidebar = d3.select('#sidebar');
+    var sidebarContainer = d3.select('#sidebar-container');
+    var svg=d3.select("svg");
 
-        function update() {
-            svg.selectAll("path").attr("d", path);  
-            updatePie();          
-        }
+    function update() {
+        svg.selectAll("path").attr("d", path);
+        updatePie();
+    }
 
-        function updatePie(){
-            var cumulativeAngle = 0;
-            var arc = d3.arc()
-                .innerRadius(0)
-                .outerRadius(5 * Math.pow(2, map.getZoom() - 12));
+    function updatePie(){
+        var cumulativeAngle = 0;
+        var arc = d3.arc()
+            .innerRadius(0)
+            .outerRadius(5 * Math.pow(2, map.getZoom() - 12));
 
-            
-            svg.selectAll(".pie")  // On sélectionne tous les pies charts
-                .attr("transform", function (d) {
-                    return "translate(" + path.centroid(d) + ")";
-                })
-                .selectAll("path")
-                .attr("d", function (d) {
-                    var startAngle = cumulativeAngle;
-                    var endAngle = 2 * Math.PI * d.value + cumulativeAngle;
-                    
-                    var arcData = arc({ startAngle: startAngle, endAngle: endAngle });
 
-                    cumulativeAngle = d.last === true ? 0 : endAngle;
-                    return arcData;
+        svg.selectAll(".pie")  // On sélectionne tous les pies charts
+            .attr("transform", function (d) {
+                return "translate(" + path.centroid(d) + ")";
+            })
+            .selectAll("path")
+            .attr("d", function (d) {
+                var startAngle = cumulativeAngle;
+                var endAngle = 2 * Math.PI * d.value + cumulativeAngle;
+
+                var arcData = arc({ startAngle: startAngle, endAngle: endAngle });
+
+                cumulativeAngle = d.last === true ? 0 : endAngle;
+                return arcData;
+            });
+    }
+
+    function drawPie() {
+        var arc = d3.arc()
+            .innerRadius(0)
+            .outerRadius(10);
+
+        var cumulativeAngle = 0;
+
+        d3.selectAll(".pie")
+            .attr("transform", function (d) {
+                return "translate(" + path.centroid(d) + ")";
+            })
+            .selectAll("path")
+            .data(function (d) {
+                var nomLigneArray = d.properties.nom_ligne.sort();
+                var total = nomLigneArray.length;
+                for (let ligne in d.properties.frequentation) {
+
+                    if (infoLigne[ligne]) {
+                        infoLigne[ligne].frequentation += d.properties.frequentation[ligne]
+                        infoLigne[ligne].stations.push(d.properties)
+                    } else {
+                        infoLigne[ligne] = {frequentation: d.properties.frequentation[ligne]}
+                        infoLigne[ligne].stations=[d.properties]
+                    }
+                }
+                return nomLigneArray.map(function (_, i) {
+                    var value = d.properties.frequentation[nomLigneArray[i]] / d.properties.sumFrequentation;
+                    //TODO: ajouter la couleur correspondante
+                    return {nom: d.properties.nom, nom_ligne: nomLigneArray[i], value: value, last: i+1 == total, affluence: d.properties.frequentation[nomLigneArray[i]]};
                 });
-        }
+            })
+            .enter()
+            .append("path")
+            .attr("d", function (d) {
+                var startAngle = cumulativeAngle;
+                var endAngle = 2 * Math.PI * d.value + cumulativeAngle;
 
-        function drawPie() {
-                var arc = d3.arc()
-                    .innerRadius(0)
-                    .outerRadius(10);
+                var arcData = arc({ startAngle: startAngle, endAngle: endAngle });
 
-                var cumulativeAngle = 0;
+                cumulativeAngle = d.last === true ? 0 : endAngle;
+                return arcData;
+            })
+            .attr("stroke", "black")
+            .attr("stroke-width", 1)
+            .style("pointer-events", "all")
+            .on('mouseover', function(e, d) {
 
-                d3.selectAll(".pie")
-                .attr("transform", function (d) {
-                    return "translate(" + path.centroid(d) + ")";
-                })
-                .selectAll("path")
-                .data(function (d) {
-                    var nomLigneArray = d.properties.nom_ligne.sort();
-                    var total = nomLigneArray.length;
-                    
-                    return nomLigneArray.map(function (_, i) {
-                        var value = d.properties.frequentation[nomLigneArray[i]] / d.properties.sumFrequentation;
-                        //TODO: ajouter la couleur correspondante
-                        return {nom: d.properties.nom, nom_ligne: nomLigneArray[i], value: value, last: i+1 == total, affluence: d.properties.frequentation[nomLigneArray[i]]};
-                    });
-                })
-                .enter()
-                .append("path")
-                .attr("d", function (d) {
-                    var startAngle = cumulativeAngle;
-                    var endAngle = 2 * Math.PI * d.value + cumulativeAngle;
-                    
-                    var arcData = arc({ startAngle: startAngle, endAngle: endAngle });
-
-                    cumulativeAngle = d.last === true ? 0 : endAngle;
-                    return arcData;
-                })
-                .attr("stroke", "black")
-                .attr("stroke-width", 1);
-            }
-
-            function mouseFct() {
-                d3.selectAll(".pie")
-                .style("pointer-events", "all")
-                .on('mouseover', function(e, d) {
-                    // on recupere la position de la souris,
-                    // e est l'object event d
-                    var mousePosition = [e.x, e.y];
-                    // on affiche le toolip
-                    tooltip.classed('hidden', false)
+                // on recupere la position de la souris,
+                // e est l'object event d
+                var mousePosition = [e.x, e.y];
+                // on affiche le toolip
+                tooltip.classed('hidden', false)
                     // on positionne le tooltip en fonction
                     // de la position de la souris
                     .attr('style', 'left:' + (mousePosition[0] + 15) +
@@ -138,166 +150,172 @@
                     // on recupere le nom de l'etat
 
                     .html("<b>"+d.nom+"</b><br/>"+"Ligne : "+d.nom_ligne+"</b><br/>"+"Affluence : "+d.affluence);
-                })
-                .on('click', function(e, d) {
-                    afficherSidebar()
-                    remplirSidebar(d.properties)
-                })
-                .on('mouseout', function() {
-                    // on cache le toolip
-                    tooltip.classed('hidden', true);
+            })
+            .on('mouseout', function() {
+                // on cache le toolip
+                tooltip.classed('hidden', true);
+            });
+    }
+
+
+    /***************************************
+     * -------------------------------------
+     * -- Affichage des arrets de métros ---
+     * -------------------------------------
+     **************************************/
+    var metro = d3.json("./data/sytral_tcl_sytral.tclarret_sans_bus.json").then(function (data) {
+        centerlat = (d3.min(data.features, function (d) {
+            return d.geometry.coordinates[0][1];
+        }) + d3.max(data.features, function (d) {
+            return d.geometry.coordinates[0][1];
+        })) / 2;
+        centerlon = (d3.min(data.features, function (d) {
+            return d.geometry.coordinates[0][0];
+        }) + d3.max(data.features, function (d) {
+            return d.geometry.coordinates[0][0];
+        })) / 2;
+
+        map.setView([centerlat, centerlon]);
+
+        var tram_lines = svg.append("g");
+        var metro_lines = svg.append("g");
+
+        var arrets = svg.append("g")
+            .attr("class", "arrets")
+            .selectAll("g")
+            .data(data.features.filter(function(d, i, self) {
+                // Utilisez une fonction de filtrage pour éviter les doublons
+                return i === self.findIndex((t) => {
+                    if(t.properties.nom === d.properties.nom){
+                        t.properties.nom_ligne=[...new Set(d.properties.nom_ligne.concat(t.properties.nom_ligne))]
+                        // On fusionne les données de fréquentation
+                        t.properties.frequentation = Object.assign({}, t.properties.frequentation, d.properties.frequentation);
+                        t.properties.sumFrequentation = sumFrequentation(t.properties.frequentation)
+                        return true
+                    }else {
+                        return false
+                    }
                 });
-            }
+            }))
+            .enter()
+            .append("g")
+            .attr("class",(d)=>d.properties.nom_ligne.join(" "))
+            .classed( "pie", true)
+            .classed("arret", true)
+        drawPie()
 
 
-        /***************************************
-         * -------------------------------------
-         * -- Affichage des arrets de métros ---
-         * -------------------------------------
-         **************************************/
-        var metro = d3.json("./data/sytral_tcl_sytral.tclarret_sans_bus.json").then(function (data) {
-            centerlat = (d3.min(data.features, function (d) {
-                return d.geometry.coordinates[0][1];
-            }) + d3.max(data.features, function (d) {
-                return d.geometry.coordinates[0][1];
-            })) / 2;
-            centerlon = (d3.min(data.features, function (d) {
-                return d.geometry.coordinates[0][0];
-            }) + d3.max(data.features, function (d) {
-                return d.geometry.coordinates[0][0];
-            })) / 2;
 
-            map.setView([centerlat, centerlon]);
+        d3.json("./data/sytral_tcl_sytral.tcllignemetrofuni_2_0_0.json").then(function (data) {
 
-            var tram_lines = svg.append("g");
-            var metro_lines = svg.append("g");
-
-            var arrets = svg.append("g")
-                .attr("class", "arrets")
-                .selectAll("g")
+            metro_lines
+                .attr("class", "metro_lines")
+                .selectAll("path")
                 .data(data.features.filter(function(d, i, self) {
                     // Utilisez une fonction de filtrage pour éviter les doublons
-                    return i === self.findIndex((t) => {
-                        if(t.properties.nom === d.properties.nom){
-                            t.properties.nom_ligne=[...new Set(d.properties.nom_ligne.concat(t.properties.nom_ligne))]
-                            // On fusionne les données de fréquentation
-                            t.properties.frequentation = Object.assign({}, t.properties.frequentation, d.properties.frequentation);
-                            t.properties.sumFrequentation = sumFrequentation(t.properties.frequentation)
-                            return true
-                        }else {
-                            return false
-                        }
-                    });
+                    return i === self.findIndex((t) =>(t.properties.ligne === d.properties.ligne));
                 }))
                 .enter()
-                .append("g")                
-                .attr("class", "pie");  
-            drawPie()
-            mouseFct()
-
-
-
-            d3.json("./data/sytral_tcl_sytral.tcllignemetrofuni_2_0_0.json").then(function (data) {
-
-                metro_lines
-                    .attr("class", "metro_lines")
-                    .selectAll("path")
-                    .data(data.features.filter(function(d, i, self) {
-                        // Utilisez une fonction de filtrage pour éviter les doublons
-                        return i === self.findIndex((t) =>(t.properties.ligne === d.properties.ligne));
-                    }))
-                    .enter()
-                    .append("path")
-                    .attr("d", path)
-                    .attr("fill", "none")
-                    .attr("stroke-width", 2)
-                    .style("pointer-events", "stroke")
-                    .attr("id", d => d.properties.ligne)
-                    .attr("stroke", d =>{
-                        col = d.properties.couleur
-                        col = col.split(" ")
-                        return "rgb("+col[0]+","+col[1]+","+col[2]+")"
-                        })
-                    .on('mouseover', mouseoverLigne())
-                    .on('mouseout', function(e, d) {
-                        d3.select(this).attr("stroke-width",2)
-                        tooltip.classed('hidden', true);
-                    })
-                    addFilter(data)
-            });
-
-            /*************************************
-             * -----------------------------------
-             * -- Affichage des lignes de tram ---
-             * -----------------------------------
-             ************************************/
-            d3.json("./data/sytral_tcl_sytral.tcllignetram_2_0_0.json").then(function (data) {
-
-                tram_lines
-                    .attr("class", "tram_lines")
-                    .selectAll("path")
-                    .data(data.features.filter(function(d, i, self) {
-                        // Utilisez une fonction de filtrage pour éviter les doublons
-                        return i === self.findIndex((t) =>(t.properties.ligne === d.properties.ligne));
-                    }))
-                    .enter()
-                    .append("path")
-                    .attr("d", path)
-                    .attr("fill", "none")
-                    .attr("stroke-width", 2)
-                    .style("pointer-events", "stroke")
-                    .attr("id", d =>  d.properties.ligne)
-                    .attr("stroke", d =>{
-                        col = d.properties.couleur
-                        col = col.split(" ")
-                        return "rgb("+col[0]+","+col[1]+","+col[2]+")"
-                        })
-                    .on('mouseover', mouseoverLigne())
-                    .on('mouseout', function(e, d) {
-                        d3.select(this).attr("stroke-width",2)
-                        tooltip.classed('hidden', true);
-                    });
-                addFilter(data)
-
-                
-            });
-
-            //pour la couleur des slices
-            function colorPie() {
-                d3.json("./data/sytral_tcl_sytral.tcllignetram_2_0_0.json").then(function (tramData) {
-                    d3.json("./data/sytral_tcl_sytral.tcllignemetrofuni_2_0_0.json").then(function (metroData) {
-                        var pieGroups = d3.selectAll(".pie");
-                        pieGroups.selectAll("path")
-                            .attr("fill", function (d_slice, i) {
-                                var color;
-
-                                tramData.features.filter(function(d_tram, i, self) {
-                                    if(d_slice.nom_ligne == d_tram.properties.ligne) {
-                                        color = d_tram.properties.couleur;
-                                    }
-                                })
-
-                                metroData.features.filter(function(d_metro, i, self) {
-                                    if(d_slice.nom_ligne == d_metro.properties.ligne) {
-                                        color = d_metro.properties.couleur;
-                                    }
-                                })
-                                color = "rgb(" + color.split(" ").join(",") + ")"
-                                return color;
-                            })
-                    });
-                });
-            }
-            colorPie();    
+                .append("path")
+                .attr("d", path)
+                .attr("fill", "none")
+                .attr("stroke-width", 2)
+                .style("pointer-events", "stroke")
+                .attr("id", d => d.properties.ligne)
+                .attr("stroke", d =>{
+                    col = d.properties.couleur
+                    col = col.split(" ")
+                    infoLigne[d.properties.ligne].color = "rgb("+col[0]+","+col[1]+","+col[2]+")"
+                    return "rgb("+col[0]+","+col[1]+","+col[2]+")"
+                })
+                .on('mouseover', mouseoverLigne())
+                .on('mouseout', function(e, d) {
+                    d3.select(this).attr("stroke-width",2)
+                    tooltip.classed('hidden', true);
+                })
         });
-    </script>
 
-    <script>
-        function switchVisu() {
-            window.location.href = "index.html";
+        /*************************************
+         * -----------------------------------
+         * -- Affichage des lignes de tram ---
+         * -----------------------------------
+         ************************************/
+        d3.json("./data/sytral_tcl_sytral.tcllignetram_2_0_0.json").then(function (data) {
+
+            tram_lines
+                .attr("class", "tram_lines")
+                .selectAll("path")
+                .data(data.features.filter(function(d, i, self) {
+                    // Utilisez une fonction de filtrage pour éviter les doublons
+                    return i === self.findIndex((t) =>(t.properties.ligne === d.properties.ligne));
+                }))
+                .enter()
+                .append("path")
+                .attr("d", path)
+                .attr("fill", "none")
+                .attr("stroke-width", 2)
+                .style("pointer-events", "stroke")
+                .attr("id", d =>  d.properties.ligne)
+                .attr("stroke", d =>{
+                    col = d.properties.couleur
+                    col = col.split(" ")
+                    infoLigne[d.properties.ligne].color = "rgb("+col[0]+","+col[1]+","+col[2]+")"
+                    return "rgb("+col[0]+","+col[1]+","+col[2]+")"
+                })
+                .on('mouseover', mouseoverLigne())
+                .on('mouseout', function(e, d) {
+                    d3.select(this).attr("stroke-width",2)
+                    tooltip.classed('hidden', true);
+                });
+
+
+            addFilter()
+        });
+
+        //pour la couleur des slices
+        function colorPie() {
+            d3.json("./data/sytral_tcl_sytral.tcllignetram_2_0_0.json").then(function (tramData) {
+                d3.json("./data/sytral_tcl_sytral.tcllignemetrofuni_2_0_0.json").then(function (metroData) {
+                    var pieGroups = d3.selectAll(".pie");
+                    pieGroups.selectAll("path")
+                        .attr("fill", function (d_slice, i) {
+                            var color;
+
+                            tramData.features.filter(function(d_tram, i, self) {
+                                if(d_slice.nom_ligne == d_tram.properties.ligne) {
+                                    color = d_tram.properties.couleur;
+                                }
+                            })
+
+                            metroData.features.filter(function(d_metro, i, self) {
+                                if(d_slice.nom_ligne == d_metro.properties.ligne) {
+                                    color = d_metro.properties.couleur;
+                                }
+                            })
+                            color = "rgb(" + color.split(" ").join(",") + ")"
+                            return color;
+                        })
+                });
+            });
         }
-    </script>
+        colorPie();
 
+
+
+
+
+
+    });
+</script>
+<script>
+    function switchVisu() {
+        // remettre sur la position initiale visu_mode
+        document.getElementById("visu_mode").checked = !document.getElementById("visu_mode").checked;
+        window.location.href = "index.html";
+
+
+    }
+</script>
 </body>
 
 
