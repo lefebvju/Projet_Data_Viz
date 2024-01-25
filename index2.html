@@ -114,34 +114,27 @@
                     return arcData;
                 })
                 .attr("stroke", "black")
-                .attr("stroke-width", 1);
-            }
+                .attr("stroke-width", 1)
+                    .style("pointer-events", "all")
+                    .on('mouseover', function(e, d) {
 
-            function mouseFct() {
-                d3.selectAll(".pie")
-                .style("pointer-events", "all")
-                .on('mouseover', function(e, d) {
-                    // on recupere la position de la souris,
-                    // e est l'object event d
-                    var mousePosition = [e.x, e.y];
-                    // on affiche le toolip
-                    tooltip.classed('hidden', false)
-                    // on positionne le tooltip en fonction
-                    // de la position de la souris
-                    .attr('style', 'left:' + (mousePosition[0] + 15) +
-                        'px; top:' + (mousePosition[1] - 35) + 'px')
-                    // on recupere le nom de l'etat
+                        // on recupere la position de la souris,
+                        // e est l'object event d
+                        var mousePosition = [e.x, e.y];
+                        // on affiche le toolip
+                        tooltip.classed('hidden', false)
+                            // on positionne le tooltip en fonction
+                            // de la position de la souris
+                            .attr('style', 'left:' + (mousePosition[0] + 15) +
+                                'px; top:' + (mousePosition[1] - 35) + 'px')
+                            // on recupere le nom de l'etat
 
-                    .html("<b>"+d.nom+"</b><br/>"+"Ligne : "+d.nom_ligne+"</b><br/>"+"Affluence : "+d.affluence);
-                })
-                .on('click', function(e, d) {
-                    afficherSidebar()
-                    remplirSidebar(d.properties)
-                })
-                .on('mouseout', function() {
-                    // on cache le toolip
-                    tooltip.classed('hidden', true);
-                });
+                            .html("<b>"+d.nom+"</b><br/>"+"Ligne : "+d.nom_ligne+"</b><br/>"+"Affluence : "+d.affluence);
+                    })
+                    .on('mouseout', function() {
+                        // on cache le toolip
+                        tooltip.classed('hidden', true);
+                    });
             }
 
 
@@ -185,10 +178,11 @@
                     });
                 }))
                 .enter()
-                .append("g")                
-                .attr("class", "pie");  
+                .append("g")
+                .attr("class",(d)=>d.properties.nom_ligne.join(" "))
+                .classed( "pie", true)
+                .classed("arret", true)
             drawPie()
-            mouseFct()
 
 
 
