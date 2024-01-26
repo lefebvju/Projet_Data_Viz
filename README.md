@@ -1,6 +1,12 @@
 ### LEFEBVRE Julien & MERCIER Loris & RAVELLA Nino
 # Projet_Data_Viz
 
+## Nos visualisations
+### Visualisation 1
+![Viz1.png](img/visu1.png)
+### Visualisation 2
+![Viz2.png](img/visu2.png)
+
 ## Liens utiles
 ### Info générales
 - [Horaire temps réelle](https://data.grandlyon.com/portail/fr/jeux-de-donnees/prochains-passages-reseau-transports-commun-lyonnais-rhonexpress-disponibilites-temps-reel/info)
@@ -92,5 +98,5 @@
 - Finitions des éléments de notre visualisation
  
 **Nino :**
-- Finalisation des pies charts
+- Finalisation des pies charts (_voir bouton Visu 2_)
 ![Pie chart](img/piechart2.png)
